@@ -4,6 +4,7 @@
   const PREFIX = 'dashboard-sante-';
   const _set = Storage.prototype.setItem;
   const _del = Storage.prototype.removeItem;
+  const _get = Storage.prototype.getItem;
   Storage.prototype.setItem = function (k, v) {
     if (typeof k === 'string' && k.indexOf(PREFIX) === 0) return;
     return _set.call(this, k, v);
@@ -11,6 +12,13 @@
   Storage.prototype.removeItem = function (k) {
     if (typeof k === 'string' && k.indexOf(PREFIX) === 0) return;
     return _del.call(this, k);
+  };
+  // Snapshot statique : on ignore tout localStorage `dashboard-sante-*`
+  // potentiellement présent (write via DevTools, ancien snapshot, autre tab…)
+  // → la page affiche TOUJOURS les valeurs exportées, jamais un état local.
+  Storage.prototype.getItem = function (k) {
+    if (typeof k === 'string' && k.indexOf(PREFIX) === 0) return null;
+    return _get.call(this, k);
   };
 
   function freeze() {
