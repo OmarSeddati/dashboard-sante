@@ -394,14 +394,14 @@ const SUPPLEMENT_CONTRIBUTIONS = {
 // Modifier ces valeurs change uniquement la coloration, pas les calculs.
 const TARGETS = {
   // ----- Macros & énergie -----
-  kcal:    { good:[2300, 2900], warnLow:1800,  warnHigh:3300, unit:'kcal' },
+  kcal:    { good:[2000, 2500], warnLow:1800,  warnHigh:3300, unit:'kcal' },
   prot:    { good:[90,   130],  warnLow:70,    warnHigh:160,  unit:'g'    },
-  gluc:    { good:[180,  280],  warnLow:120,   warnHigh:330,  unit:'g'    },
+  gluc:    { good:[50,  180],  warnLow:35,   warnHigh:330,  unit:'g'    },
   lip:     { good:[60,   150],  warnLow:40,    warnHigh:200,  unit:'g'    },
-  fibre:   { good:[25,   45],   warnLow:18,    warnHigh:60,   unit:'g'    },
+  fibre:   { good:[40,   60],   warnLow:18,    warnHigh:78,   unit:'g'    },
   // ----- Électrolytes -----
   vitC:    { good:[110,  1000], warnLow:75,    warnHigh:2000, unit:'mg'   },
-  k:       { good:[3500, 4700], warnLow:3000,  warnHigh:5500, unit:'mg'   },
+  k:       { good:[4000, 4700], warnLow:3000,  warnHigh:5500, unit:'mg'   },
   na:      { good:[0,    2300],                warnHigh:3000, unit:'mg'   },
   // ----- Minéraux -----
   ca:      { good:[1000, 2000], warnLow:700,   warnHigh:2500, unit:'mg'   },
@@ -421,7 +421,7 @@ const TARGETS = {
   vitK2:   { good:[90,   250],  warnLow:50,    warnHigh:500,  unit:'µg'   },
   // ----- Vitamines B (complexe complet) -----
   b1:      { good:[1.2,  50],   warnLow:0.9,                  unit:'mg'   },  // RDA 1.1-1.2 mg, hydrosoluble, pas d'UL
-  b2:      { good:[1.3,  50],   warnLow:1.0,                  unit:'mg'   },  // RDA 1.1-1.3 mg, pas d'UL
+  b2:      { good:[1.3,  50],   warnLow:1,                  unit:'mg'   },  // RDA 1.1-1.3 mg, pas d'UL
   b3:      { good:[14,   60],   warnLow:11,    warnHigh:900,  unit:'mg'   },  // RDA 14-16 mg. UL 35 mg = acide nicotinique (flushing) ; nicotinamide UL ~900 mg. Diète riche en niacine de viande/graines = normal d'être au-dessus 35.
   b5:      { good:[5,    50],   warnLow:3,                    unit:'mg'   },  // AI 5 mg, pas d'UL
   b6:      { good:[1.3,  10],   warnLow:1,     warnHigh:25,   unit:'mg'   },

@@ -1600,6 +1600,44 @@ async function saveAsDefaults() {
       return head + nb + tail;
     });
 
+    // ---- 1 ter. Patch CONFIG : TARGETS et MACRO_SPLIT_TARGET ----
+    // Édités via clic-pour-éditer dans la UI (good:[lo,hi], warnLow, warnHigh).
+    // Sans ce patch, les modifs d'objectifs vivent en localStorage et sont perdues
+    // à l'export. unit est laissé tel quel (non éditable runtime).
+    const patchTargetBlock = (txt, blockName, obj) => {
+      const reTop = new RegExp(`(const\\s+${blockName}\\s*=\\s*\\{)([\\s\\S]*?)(\\n\\};)`);
+      return txt.replace(reTop, (m, head, body, tail) => {
+        let nb = body;
+        for (const key of Object.keys(obj)) {
+          const t = obj[key];
+          if (!t || typeof t !== 'object') continue;
+          const reBlock = new RegExp(`(\\b${escapeId(key)}\\s*:\\s*\\{)([^}]*)(\\})`);
+          nb = nb.replace(reBlock, (mm, h, b, tt) => {
+            let bb = b;
+            if (Array.isArray(t.good) && t.good.length === 2
+                && typeof t.good[0] === 'number' && typeof t.good[1] === 'number') {
+              bb = bb.replace(
+                /(\bgood\s*:\s*\[\s*)[\d.]+(\s*,\s*)[\d.]+(\s*\])/,
+                `$1${t.good[0]}$2${t.good[1]}$3`
+              );
+            }
+            if (typeof t.warnLow === 'number') {
+              const re2 = /(\bwarnLow\s*:\s*)[\d.]+/;
+              if (re2.test(bb)) bb = bb.replace(re2, `$1${t.warnLow}`);
+            }
+            if (typeof t.warnHigh === 'number') {
+              const re3 = /(\bwarnHigh\s*:\s*)[\d.]+/;
+              if (re3.test(bb)) bb = bb.replace(re3, `$1${t.warnHigh}`);
+            }
+            return h + bb + tt;
+          });
+        }
+        return head + nb + tail;
+      });
+    };
+    newConfig = patchTargetBlock(newConfig, 'TARGETS', TARGETS);
+    newConfig = patchTargetBlock(newConfig, 'MACRO_SPLIT_TARGET', MACRO_SPLIT_TARGET);
+
     // ---- 2. Patch HTML : data-qty / data-edit / data-edit-food / data-supp-display ----
     const fmtFood   = q => Number.isInteger(q) ? String(q) : Number(q.toFixed(1)).toString();
     const fmtProf   = (k, v) => k === 'water'
