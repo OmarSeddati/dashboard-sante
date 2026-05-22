@@ -1576,6 +1576,30 @@ async function saveAsDefaults() {
       return head + nb + tail;
     });
 
+    // ---- 1 bis. Patch CONFIG : defaultMixOleagineux (total + parts) ----
+    // Critique : applyMixOleagineuxToFoods() s'exécute à l'init et écrase
+    // foods[noix/...].qty à partir de mixOleagineux. Sans ce patch, les qty
+    // sauvegardées dans defaultFoods sont annulées au chargement suivant.
+    newConfig = newConfig.replace(/(const\s+defaultMixOleagineux\s*=\s*\{)([\s\S]*?)(\n\};)/, (m, head, body, tail) => {
+      let nb = body;
+      nb = nb.replace(/(\btotal\s*:\s*)[\d.]+/, `$1${mixOleagineux.total}`);
+      nb = nb.replace(/(\bparts\s*:\s*\{)([^}]*)(\})/, (m2, h2, b2, t2) => {
+        let pb = b2;
+        for (const id of MIX_OLEAGINEUX_IDS) {
+          const v = mixOleagineux.parts[id];
+          if (typeof v !== 'number') continue;
+          const re = new RegExp(`(\\b${escapeId(id)}\\s*:\\s*)[\\d.]+`);
+          if (re.test(pb)) {
+            pb = pb.replace(re, `$1${v}`);
+          } else {
+            pb = pb.replace(/\s*$/, `, ${id}:${v}`);
+          }
+        }
+        return h2 + pb + t2;
+      });
+      return head + nb + tail;
+    });
+
     // ---- 2. Patch HTML : data-qty / data-edit / data-edit-food / data-supp-display ----
     const fmtFood   = q => Number.isInteger(q) ? String(q) : Number(q.toFixed(1)).toString();
     const fmtProf   = (k, v) => k === 'water'

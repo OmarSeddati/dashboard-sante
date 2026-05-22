@@ -35,29 +35,29 @@ const defaultProfile = {
 // (la masse fibreuse est comptée séparément dans `fibre`).
 const defaultFoods = {
   oeufs:         { name:'Œufs bio',                  qty:3,   unit:'pièce', step:1,   kcal:70,    prot:6,     k:65,    fibre:0,     vitC:0,     na:62,   gluc:0.4    },
-  patateDouce:   { name:'Patate douce',              qty:100, unit:'g',     step:10,  kcal:0.86,  prot:0.016, k:3.37,  fibre:0.030, vitC:0.024, na:0.55, gluc:0.207  },
+  patateDouce:   { name:'Patate douce',              qty:150, unit:'g',     step:10,  kcal:0.86,  prot:0.016, k:3.37,  fibre:0.030, vitC:0.024, na:0.55, gluc:0.207  },
   champignons:   { name:'Champignons de Paris',      qty:50, unit:'g',     step:10,  kcal:0.22,  prot:0.031, k:3.18,  fibre:0.010, vitC:0.02,  na:0.05, gluc:0.033  },
-  courgettes:    { name:'Courgettes',                qty:66, unit:'g',     step:10,  kcal:0.17,  prot:0.012, k:2.61,  fibre:0.011, vitC:0.179, na:0.08, gluc:0.031  },
+  courgettes:    { name:'Courgettes',                qty:80, unit:'g',     step:10,  kcal:0.17,  prot:0.012, k:2.61,  fibre:0.011, vitC:0.179, na:0.08, gluc:0.031  },
   huileOlivePD:  { name:"Huile d'olive (matin)",     qty:12,  unit:'g',     step:1,   kcal:9,     prot:0,     k:0,     fibre:0,     vitC:0,     na:0,    gluc:0      },
   chia:          { name:'Graines de chia',           qty:15,  unit:'g',     step:5,   kcal:4.86,  prot:0.17,  k:4.07,  fibre:0.34,  vitC:0,     na:0.16, gluc:0.077  },
   linMoulu:      { name:'Graines de lin moulues',    qty:15,  unit:'g',     step:1,   kcal:5.34,  prot:0.18,  k:8.13,  fibre:0.27,  vitC:0,     na:0.30, gluc:0.016  },
-  dattes:        { name:'Dattes (Deglet Nour)',      qty:25,  unit:'g',     step:5,   kcal:2.82,  prot:0.0245,k:6.56,  fibre:0.08,  vitC:0.004,          gluc:0.67   },
-  noix:          { name:'Noix',                      qty:45.8,  unit:'g',     step:5,   kcal:6.54,  prot:0.15,  k:4.41,  fibre:0.067, vitC:0,              gluc:0.069  },
-  noixBresil:    { name:'Noix du Brésil',            qty:9.2,   unit:'g',     step:1,   kcal:6.56,  prot:0.14,  k:6.59,  fibre:0.075, vitC:0,              gluc:0.053  },
-  noisettes:     { name:'Noisettes',                 qty:9.2,  unit:'g',     step:1,   kcal:6.28,  prot:0.15,  k:6.80,  fibre:0.097, vitC:0,              gluc:0.072  },
-  grainesCourge: { name:'Graines de courge',         qty:27.5,  unit:'g',     step:1,   kcal:5.59,  prot:0.30,  k:8.09,  fibre:0.06,  vitC:0,              gluc:0.045  },
-  amandes:       { name:'Amandes',                   qty:9.2,  unit:'g',     step:1,   kcal:5.79,  prot:0.21,  k:7.33,  fibre:0.125, vitC:0,              gluc:0.095  },
-  nigelle:       { name:'Nigelle',                   qty:2.3,   unit:'g',     step:1,   kcal:4,     prot:0.23,  k:8.08,  fibre:0.06,  vitC:0,              gluc:0.23   },
-  sesame:        { name:'Sésame complet (moulu)',    qty:10,  unit:'g',     step:1,   kcal:5.73,  prot:0.177, k:4.68,  fibre:0.118, vitC:0,              gluc:0.098  },
+  dattes:        { name:'Dattes (Deglet Nour)',      qty:0,  unit:'g',     step:5,   kcal:2.82,  prot:0.0245,k:6.56,  fibre:0.08,  vitC:0.004,          gluc:0.67   },
+  noix:          { name:'Noix',                      qty:43.2,  unit:'g',     step:5,   kcal:6.54,  prot:0.15,  k:4.41,  fibre:0.067, vitC:0,              gluc:0.069  },
+  noixBresil:    { name:'Noix du Brésil',            qty:8.6,   unit:'g',     step:1,   kcal:6.56,  prot:0.14,  k:6.59,  fibre:0.075, vitC:0,              gluc:0.053  },
+  noisettes:     { name:'Noisettes',                 qty:4.3,  unit:'g',     step:1,   kcal:6.28,  prot:0.15,  k:6.80,  fibre:0.097, vitC:0,              gluc:0.072  },
+  grainesCourge: { name:'Graines de courge',         qty:8.6,  unit:'g',     step:1,   kcal:5.59,  prot:0.30,  k:8.09,  fibre:0.06,  vitC:0,              gluc:0.045  },
+  amandes:       { name:'Amandes',                   qty:4.3,  unit:'g',     step:1,   kcal:5.79,  prot:0.21,  k:7.33,  fibre:0.125, vitC:0,              gluc:0.095  },
+  nigelle:       { name:'Nigelle',                   qty:2.2,   unit:'g',     step:1,   kcal:4,     prot:0.23,  k:8.08,  fibre:0.06,  vitC:0,              gluc:0.23   },
+  sesame:        { name:'Sésame complet (moulu)',    qty:8.6,  unit:'g',     step:1,   kcal:5.73,  prot:0.177, k:4.68,  fibre:0.118, vitC:0,              gluc:0.098  },
   huileOliveOl:  { name:"Huile d'olive (oléag.)",    qty:12,  unit:'g',     step:1,   kcal:9,     prot:0,     k:0,     fibre:0,     vitC:0,              gluc:0      },
   chocolat70:    { name:'Chocolat noir 70%',         qty:20,  unit:'g',     step:5,   kcal:5.46,  prot:0.078, k:7.15,  fibre:0.11,  vitC:0,              gluc:0.35   },
-  banane:        { name:'Banane (après-midi)',       qty:120, unit:'g',     step:10,  kcal:0.89,  prot:0.011, k:3.58,  fibre:0.026, vitC:0.087,          gluc:0.197  },
+  banane:        { name:'Banane (après-midi)',       qty:180, unit:'g',     step:10,  kcal:0.89,  prot:0.011, k:3.58,  fibre:0.026, vitC:0.087,          gluc:0.197  },
   kiwi:          { name:'Kiwi',                      qty:1,   unit:'pièce', step:1,   kcal:42,    prot:0.8,   k:215,   fibre:2,     vitC:64,             gluc:7.7    },
   whey:          { name:'Whey',                      qty:20,  unit:'g',     step:5,   kcal:4,     prot:0.8,   k:1.5,   fibre:0,     vitC:0,              gluc:0.05   },
   collagene:     { name:'Collagène hydrolysé',       qty:10,  unit:'g',     step:1,   kcal:3.6,   prot:0.9,   k:0,     fibre:0,     vitC:0,              gluc:0      },
   viandePoisson: { name:'Viande / poisson',          qty:200, unit:'g',     step:10,  kcal:1.65,  prot:0.25,  k:2.5,   fibre:0,     vitC:0,     na:0.7,  gluc:0      },
-  legumesDiner:  { name:'Légumes (dîner mix)',       qty:400, unit:'g',     step:10,  kcal:0.5,   prot:0.02,  k:2.5,   fibre:0.025, vitC:0.15,  na:0.5,  gluc:0.09   },
-  pomme:         { name:'Pomme (soir)',              qty:150, unit:'g',     step:10,  kcal:0.52,  prot:0.003, k:1.07,  fibre:0.024, vitC:0.046,          gluc:0.113  },
+  legumesDiner:  { name:'Légumes (dîner mix)',       qty:250, unit:'g',     step:10,  kcal:0.5,   prot:0.02,  k:2.5,   fibre:0.025, vitC:0.15,  na:0.5,  gluc:0.09   },
+  pomme:         { name:'Pomme (soir)',              qty:75, unit:'g',     step:10,  kcal:0.52,  prot:0.003, k:1.07,  fibre:0.024, vitC:0.046,          gluc:0.113  },
   amandesCoucher:{ name:'Amandes (coucher)',         qty:5,   unit:'g',     step:1,   kcal:5.79,  prot:0.21,  k:7.33,  fibre:0.125, vitC:0,              gluc:0.095  },
   sel:           { name:'Sel ajouté (total / jour)', qty:3,  unit:'g',     step:0.5, kcal:0,     prot:0,     k:0,     fibre:0,     vitC:0,     na:387,  gluc:0      },
   clousGirofle:  { name:'Clous de girofle',          qty:2,   unit:'pièce', step:1,   kcal:0.3,   prot:0.003, k:0.5,   fibre:0.017, vitC:0,     na:0.014,gluc:0.033  }
@@ -85,13 +85,13 @@ const foodGroups = [
 // sans toucher aux 6 inputs un par un.
 const MIX_OLEAGINEUX_IDS = ['noix','noixBresil','noisettes','grainesCourge','amandes','nigelle','sesame'];
 const defaultMixOleagineux = {
-  total: 111,                   // g/jour pour les 7 oléagineux
-  parts: { noix:50, noixBresil:8, noisettes:10, grainesCourge:20, amandes:10, nigelle:3, sesame:10 }
+  total: 80,                   // g/jour pour les 7 oléagineux
+  parts: { noix:300, noixBresil:60, noisettes:30, grainesCourge:60, amandes:30, nigelle:15, sesame:60 }
 };
 
 // ---------- 3) SUPPLÉMENTS ----------
 const defaultSupplements = {
-  zinc: { name:'Zinc (WeightWorld)',   qty:12.5, unit:'mg', step:0.5, hint:'25 = 1j/1, 12,5 = 1j/2, 0 = pause' },
+  zinc: { name:'Zinc (WeightWorld)',   qty:8, unit:'mg', step:0.5, hint:'25 = 1j/1, 12,5 = 1j/2, 0 = pause' },
   vitC: { name:'Vit C (½ cp Innovit)', qty:500,  unit:'mg', step:50,  hint:'500 = ½ cp, 250 = ¼ cp, 0 = pause' }
 };
 
