@@ -30,8 +30,10 @@ header { text-align:center; padding:40px 0 32px; position:relative; }
 header h1 { font-family:var(--font-display); font-size:clamp(28px,5vw,42px); font-weight:700; color:var(--text); letter-spacing:-0.5px; margin-bottom:4px; }
 header h1 span { color:var(--accent); }
 header p { color:var(--text-dim); font-size:14px; }
-#export-snapshot-btn { position:absolute; top:16px; right:0; }
-@media (max-width:600px) { #export-snapshot-btn { position:static; margin-top:14px; } }
+.icon-btn { position:absolute; top:16px; right:0; width:42px; height:42px; padding:0; display:inline-flex; align-items:center; justify-content:center; background:var(--bg-card); border:1px solid var(--border); border-radius:10px; color:var(--text); font-size:20px; line-height:1; cursor:pointer; transition:all 0.18s ease; }
+.icon-btn:hover { background:var(--bg-card-hover); border-color:var(--accent); color:var(--accent); transform:translateY(-1px); box-shadow:0 4px 14px rgba(0,0,0,0.25); }
+.icon-btn:active { transform:scale(0.95); }
+@media (max-width:600px) { .icon-btn { position:static; margin:14px auto 0; } }
 .stats-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin-bottom:28px; }
 .stat-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-sm); padding:16px; text-align:center; }
 .stat-card .val { font-size:22px; font-weight:700; color:var(--accent); }
@@ -174,6 +176,15 @@ header p { color:var(--text-dim); font-size:14px; }
 .qty-input::-webkit-inner-spin-button, .qty-input::-webkit-outer-spin-button { opacity:1; }
 .aliment-unit { color:var(--text-dim); font-size:13px; min-width:50px; }
 .aliment-stats { font-size:12px; color:var(--text-dim); text-align:right; line-height:1.45; }
+/* Mix oléagineux : ligne "Total" surlignée + lignes de parts avec qty dérivée */
+.mix-total-row { background:var(--accent-dim); border-color:rgba(79,209,165,0.4); }
+.mix-total-row .aliment-name { color:var(--accent); }
+.mix-part-row { grid-template-columns:minmax(140px,2fr) auto auto auto 1fr; }
+.mix-derived { font-size:12px; color:var(--accent); font-variant-numeric:tabular-nums; min-width:96px; text-align:right; padding-left:6px; border-left:1px dashed var(--border); }
+@media (max-width:600px) {
+  .mix-part-row { grid-template-columns:1fr 80px auto; grid-template-areas:"name qty unit" "derived derived derived" "stats stats stats"; }
+  .mix-derived { grid-area:derived; text-align:left; border-left:none; padding-left:0; }
+}
 /* .kcal-val par-ligne d'aliment : neutre (la part d'un aliment n'est pas une alerte en soi) */
 .aliment-stats .kcal-val { color:var(--text); font-weight:600; }
 .aliment-stats .prot-val { color:var(--purple); font-weight:600; }

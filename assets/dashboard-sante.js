@@ -19,11 +19,14 @@ function toggleVig(el) {
 let foods       = JSON.parse(JSON.stringify(defaultFoods));
 let supplements = JSON.parse(JSON.stringify(defaultSupplements));
 let profile     = { ...defaultProfile };
+let mixOleagineux = JSON.parse(JSON.stringify(defaultMixOleagineux));
 
 const STORAGE_KEY     = 'dashboard-sante-foods-v1';
 const PROFILE_KEY     = 'dashboard-sante-profile-v1';
 const SUPPLEMENTS_KEY = 'dashboard-sante-supplements-v1';
 const CHECKLIST_KEY   = 'dashboard-sante-checklist-v1';
+const MIX_OLEAGINEUX_KEY = 'dashboard-sante-mix-oleagineux-v1';
+const TARGETS_KEY        = 'dashboard-sante-targets-v1';
 const ORDER_KEY_PREFIX = 'dashboard-sante-order-v1-';
 const REORDERABLE_TABS = ['routine', 'jeune'];
 let saveStatusTimer = null;
@@ -128,6 +131,216 @@ function loadSupplements() {
   }
 }
 
+// ──────── MIX OLÉAGINEUX (config par parts + total) ────────
+// L'utilisateur définit la dose journalière totale + les parts relatives.
+// Les qty individuelles sont dérivées : qty[id] = (parts[id] / Σparts) × total.
+// Le résultat est arrondi à 0,1g pour rester lisible. Les apports finaux
+// (kcal/prot/k/...) restent calculés à partir de foods[id].qty comme avant.
+function saveMixOleagineux() {
+  try {
+    localStorage.setItem(MIX_OLEAGINEUX_KEY, JSON.stringify(mixOleagineux));
+    showSaveStatus('✓ Sauvegardé');
+  } catch (err) {
+    showSaveStatus('✗ Sauvegarde impossible');
+  }
+}
+
+function loadMixOleagineux() {
+  try {
+    const raw = localStorage.getItem(MIX_OLEAGINEUX_KEY);
+    if (!raw) return false;
+    const data = JSON.parse(raw);
+    if (!data || typeof data !== 'object') return false;
+    if (typeof data.total === 'number' && data.total >= 0) mixOleagineux.total = data.total;
+    if (data.parts && typeof data.parts === 'object') {
+      for (const id of MIX_OLEAGINEUX_IDS) {
+        const v = data.parts[id];
+        if (typeof v === 'number' && v >= 0) mixOleagineux.parts[id] = v;
+      }
+    }
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+// ==================== TARGETS — édition inline + persistence ====================
+
+function saveTargets() {
+  try {
+    const data = { targets:{}, macroSplit:{} };
+    for (const m of Object.keys(TARGETS))            data.targets[m]    = TARGETS[m];
+    for (const k of Object.keys(MACRO_SPLIT_TARGET)) data.macroSplit[k] = MACRO_SPLIT_TARGET[k];
+    localStorage.setItem(TARGETS_KEY, JSON.stringify(data));
+    showSaveStatus('✓ Objectif sauvegardé');
+  } catch (e) { /* silent */ }
+}
+
+function loadTargets() {
+  try {
+    const raw = localStorage.getItem(TARGETS_KEY);
+    if (!raw) return false;
+    const data = JSON.parse(raw);
+    if (!data) return false;
+    if (data.targets && typeof data.targets === 'object') {
+      for (const m of Object.keys(data.targets)) {
+        if (TARGETS[m] && typeof data.targets[m] === 'object') {
+          TARGETS[m] = { ...TARGETS[m], ...data.targets[m] };
+        }
+      }
+    }
+    if (data.macroSplit && typeof data.macroSplit === 'object') {
+      for (const k of Object.keys(data.macroSplit)) {
+        if (MACRO_SPLIT_TARGET[k] && typeof data.macroSplit[k] === 'object') {
+          MACRO_SPLIT_TARGET[k] = { ...MACRO_SPLIT_TARGET[k], ...data.macroSplit[k] };
+        }
+      }
+    }
+    return true;
+  } catch (e) { return false; }
+}
+
+// Format affichable d'une target. Ex : { good:[1000,2000], unit:'mg' } → "1000-2000 mg"
+function formatTargetText(metric) {
+  const t = TARGETS[metric];
+  if (!t || !Array.isArray(t.good) || t.good.length !== 2) return '—';
+  const [lo, hi] = t.good;
+  const u = t.unit || '';
+  // Cas "max seul" : lo=0 et warnHigh défini → "≤hi unit"
+  if (lo === 0 && hi > 0)             return `≤${fmt(hi)} ${u}`.trim();
+  // Cas "min seul" : hi très élevé (>1e6) → "≥lo unit"
+  if (hi >= 1e6)                       return `≥${fmt(lo)} ${u}`.trim();
+  return `${fmt(lo)}-${fmt(hi)} ${u}`.trim();
+}
+
+// Parse "1000-2000" / "≤2300" / "≥110" / "1000+" → { lo, hi }
+function parseTargetText(txt) {
+  if (typeof txt !== 'string') return null;
+  const cleaned = txt.replace(/[^0-9.,\-≤≥<>=+\s]/g, '').replace(/\s+/g, '');
+  if (!cleaned) return null;
+  // ≤ ou <=
+  if (/^(≤|<=)/.test(cleaned)) {
+    const v = parseFloat(cleaned.replace(/^(≤|<=)/, '').replace(',', '.'));
+    if (!isFinite(v) || v < 0) return null;
+    return { lo: 0, hi: v };
+  }
+  // ≥ ou >= ou trailing "+"
+  if (/^(≥|>=)/.test(cleaned) || /\+$/.test(cleaned)) {
+    const v = parseFloat(cleaned.replace(/^(≥|>=)/, '').replace(/\+$/, '').replace(',', '.'));
+    if (!isFinite(v) || v < 0) return null;
+    return { lo: v, hi: 1e9 };
+  }
+  // "lo-hi"
+  const m = cleaned.match(/^(-?\d+(?:[.,]\d+)?)-(-?\d+(?:[.,]\d+)?)$/);
+  if (m) {
+    const lo = parseFloat(m[1].replace(',', '.'));
+    const hi = parseFloat(m[2].replace(',', '.'));
+    if (!isFinite(lo) || !isFinite(hi) || hi < lo) return null;
+    return { lo, hi };
+  }
+  // Valeur seule → traitée comme min
+  const v = parseFloat(cleaned.replace(',', '.'));
+  if (isFinite(v) && v >= 0) return { lo: v, hi: 1e9 };
+  return null;
+}
+
+// Restitue le texte de chaque cible éditable dans le DOM
+function renderTargets() {
+  document.querySelectorAll('[data-target-edit]').forEach(el => {
+    const metric = el.dataset.targetEdit;
+    if (!TARGETS[metric]) return;
+    el.textContent = formatTargetText(metric);
+    if (el.contentEditable !== 'true') {
+      el.contentEditable = 'true';
+      el.classList.add('editable');
+      el.spellcheck = false;
+      el.title = "Cliquer pour éditer · format : min-max, ≤max ou ≥min";
+    }
+  });
+  // Cibles % macros (P/G/L)
+  document.querySelectorAll('[data-macro-split-edit]').forEach(el => {
+    const macro = el.dataset.macroSplitEdit;
+    if (!MACRO_SPLIT_TARGET[macro]) return;
+    const t = MACRO_SPLIT_TARGET[macro];
+    el.textContent = `${fmt(t.good[0])}-${fmt(t.good[1])}%`;
+    if (el.contentEditable !== 'true') {
+      el.contentEditable = 'true';
+      el.classList.add('editable');
+      el.spellcheck = false;
+      el.title = "Cliquer pour éditer la cible % macros (min-max)";
+    }
+  });
+}
+
+function bindTargetEditors() {
+  // [data-target-edit]
+  document.querySelectorAll('[data-target-edit]').forEach(el => {
+    if (el.__targetBound) return;
+    el.__targetBound = true;
+    const commit = () => {
+      const metric = el.dataset.targetEdit;
+      const parsed = parseTargetText(el.textContent);
+      if (!parsed) { renderTargets(); return; }
+      const orig = TARGETS[metric] || {};
+      // On préserve warnLow/warnHigh si compatibles, sinon on les recalcule autour de la cible
+      const wLow  = (orig.warnLow !== undefined && orig.warnLow < parsed.lo)
+                      ? orig.warnLow : Math.max(0, parsed.lo * 0.7);
+      const wHigh = (orig.warnHigh !== undefined && orig.warnHigh > parsed.hi && parsed.hi < 1e8)
+                      ? orig.warnHigh : (parsed.hi < 1e8 ? parsed.hi * 1.3 : undefined);
+      TARGETS[metric] = { ...orig, good: [parsed.lo, parsed.hi] };
+      if (wLow !== undefined)  TARGETS[metric].warnLow  = wLow;
+      if (wHigh !== undefined) TARGETS[metric].warnHigh = wHigh;
+      saveTargets();
+      renderTargets();
+      updateAll();
+    };
+    el.addEventListener('blur', commit);
+    el.addEventListener('keydown', e => {
+      if (e.key === 'Enter') { e.preventDefault(); el.blur(); }
+      if (e.key === 'Escape') { e.preventDefault(); renderTargets(); el.blur(); }
+    });
+  });
+  // [data-macro-split-edit]
+  document.querySelectorAll('[data-macro-split-edit]').forEach(el => {
+    if (el.__macroSplitBound) return;
+    el.__macroSplitBound = true;
+    const commit = () => {
+      const macro = el.dataset.macroSplitEdit;
+      const parsed = parseTargetText(el.textContent.replace('%', ''));
+      if (!parsed || !MACRO_SPLIT_TARGET[macro]) { renderTargets(); return; }
+      MACRO_SPLIT_TARGET[macro].good = [parsed.lo, Math.min(parsed.hi, 100)];
+      saveTargets();
+      renderTargets();
+      updateAll();
+    };
+    el.addEventListener('blur', commit);
+    el.addEventListener('keydown', e => {
+      if (e.key === 'Enter') { e.preventDefault(); el.blur(); }
+      if (e.key === 'Escape') { e.preventDefault(); renderTargets(); el.blur(); }
+    });
+  });
+}
+
+function resetTargetsToDefaults() {
+  if (!confirm('Réinitialiser tous les objectifs nutritionnels aux valeurs par défaut ?')) return;
+  try { localStorage.removeItem(TARGETS_KEY); } catch (e) {}
+  location.reload();
+}
+
+function mixPartsSum() {
+  return MIX_OLEAGINEUX_IDS.reduce((s, id) => s + (mixOleagineux.parts[id] || 0), 0);
+}
+
+function applyMixOleagineuxToFoods() {
+  const sum = mixPartsSum();
+  if (sum <= 0 || !(mixOleagineux.total > 0)) return;
+  for (const id of MIX_OLEAGINEUX_IDS) {
+    if (!foods[id]) continue;
+    const pct = (mixOleagineux.parts[id] || 0) / sum;
+    foods[id].qty = Math.round(mixOleagineux.total * pct * 10) / 10;
+  }
+}
+
 function exportFoods() {
   const data = { savedAt: new Date().toISOString(), qty: {}, supplements: {} };
   for (const id of Object.keys(foods)) data.qty[id] = foods[id].qty;
@@ -189,6 +402,10 @@ function fmt(v, decimals=0) {
 
 function compute(ids) {
   const t = { kcal:0, prot:0, k:0, fibre:0, vitC:0, na:0, gluc:0 };
+  // Initialiser les micros à 0
+  if (typeof MICRO_KEYS !== 'undefined') {
+    for (const key of MICRO_KEYS) t[key] = 0;
+  }
   for (const id of ids) {
     const f = foods[id];
     if (!f) continue;
@@ -199,6 +416,15 @@ function compute(ids) {
     t.vitC  += (f.vitC  || 0) * f.qty;
     t.na    += (f.na    || 0) * f.qty;
     t.gluc  += (f.gluc  || 0) * f.qty;
+    // Micronutriments (table parallèle MICRONUTRIENTS)
+    if (typeof MICRONUTRIENTS !== 'undefined') {
+      const m = MICRONUTRIENTS[id];
+      if (m) {
+        for (const key of MICRO_KEYS) {
+          t[key] += (m[key] || 0) * f.qty;
+        }
+      }
+    }
   }
   return t;
 }
@@ -209,14 +435,43 @@ function renderAlimentsList() {
   let html = '';
   for (const group of foodGroups) {
     html += `<div class="aliment-group"><div class="aliment-group-title">${group.title}</div>`;
+
+    // Mix oléagineux : ligne "Total" + 6 lignes de parts (qty dérivée), puis
+    // les autres ids du groupe (huile / chocolat) en mode qty classique.
+    const isMix = group.title === 'Mix oléagineux';
+    if (isMix) {
+      const sum = mixPartsSum();
+      html += `<div class="aliment-row mix-total-row" data-mix-total>
+        <span class="aliment-name"><strong>Total quotidien (mix)</strong></span>
+        <input type="number" class="qty-input" min="0" step="5" value="${mixOleagineux.total}" data-mix-total-input title="Dose journalière totale du mix d'oléagineux. Les composants sont distribués selon les parts ci-dessous." />
+        <span class="aliment-unit">g/j</span>
+        <span class="aliment-stats" data-mix-sum>somme parts : ${sum}</span>
+      </div>`;
+    }
+
     for (const id of group.ids) {
       const f = foods[id];
-      html += `<div class="aliment-row" data-id="${id}">
-        <span class="aliment-name">${f.name}</span>
-        <input type="number" class="qty-input" min="0" step="${f.step}" value="${f.qty}" data-id="${id}" />
-        <span class="aliment-unit">${f.unit}${f.qty > 1 && f.unit === 'pièce' ? 's' : ''}</span>
-        <span class="aliment-stats" data-row-stats="${id}"></span>
-      </div>`;
+      if (!f) continue;
+      const isMixPart = isMix && MIX_OLEAGINEUX_IDS.indexOf(id) >= 0;
+      if (isMixPart) {
+        const sum  = mixPartsSum();
+        const part = mixOleagineux.parts[id] || 0;
+        const pct  = sum > 0 ? (part / sum * 100) : 0;
+        html += `<div class="aliment-row mix-part-row" data-mix-part="${id}">
+          <span class="aliment-name">${f.name}</span>
+          <input type="number" class="qty-input" min="0" step="1" value="${part}" data-mix-part-input="${id}" title="Part relative — la qté finale = part × total / Σ parts" />
+          <span class="aliment-unit">part</span>
+          <span class="mix-derived" data-mix-derived="${id}">${pct.toFixed(1)}% → ${f.qty}${f.unit}</span>
+          <span class="aliment-stats" data-row-stats="${id}"></span>
+        </div>`;
+      } else {
+        html += `<div class="aliment-row" data-id="${id}">
+          <span class="aliment-name">${f.name}</span>
+          <input type="number" class="qty-input" min="0" step="${f.step}" value="${f.qty}" data-id="${id}" />
+          <span class="aliment-unit">${f.unit}${f.qty > 1 && f.unit === 'pièce' ? 's' : ''}</span>
+          <span class="aliment-stats" data-row-stats="${id}"></span>
+        </div>`;
+      }
     }
     html += `</div>`;
   }
@@ -384,6 +639,38 @@ function updateTotals() {
   // Vit C en pic au moment du zinc à 16h (kiwi alim + suppl Innovit)
   const kiwiVitC = foods.kiwi ? foods.kiwi.vitC * foods.kiwi.qty : 0;
   setAll('[data-derived="vitCAt16h"]', fmt(kiwiVitC + suppVitC));
+
+  // ---- Micronutriments : alim / supplément / total + coloration ----
+  if (typeof MICRO_KEYS !== 'undefined') {
+    for (const m of MICRO_KEYS) {
+      const foodVal  = total[m] || 0;
+      const suppVal  = (typeof SUPPLEMENT_CONTRIBUTIONS !== 'undefined' && SUPPLEMENT_CONTRIBUTIONS[m]) || 0;
+      const grandVal = foodVal + suppVal;
+      const t = TARGETS[m];
+      const u = (t && t.unit) || '';
+      // 1 décimale pour micros à petites valeurs (mg ≤ ~10, µg ≤ ~10)
+      const dec = (['cu','mn','b1','b2','b3','b5','b6','b12','vitD','vitK2'].includes(m)) ? 1 : 0;
+      setAll(`[data-food="${m}"]`,  `~${fmtFr(foodVal, dec)} ${u}`.trim());
+      setAll(`[data-supp="${m}"]`,  suppVal > 0 ? `~${fmtFr(suppVal, dec)} ${u}`.trim() : '—');
+      setAll(`[data-grand="${m}"]`, `~${fmtFr(grandVal, dec)} ${u}`.trim());
+      if (t) {
+        const status = classifyTarget(m, grandVal);
+        applyStatusClass(`[data-grand="${m}"]`, status);
+        applyStatusClass(`[data-food="${m}"]`,  status);
+      }
+    }
+  }
+
+  // Ratio Zn / Cu (informatif — cible idéale 0,7-1,0)
+  const cuTotal = (total.cu || 0) + ((typeof SUPPLEMENT_CONTRIBUTIONS !== 'undefined' && SUPPLEMENT_CONTRIBUTIONS.cu) || 0);
+  if (cuTotal > 0) {
+    const znTotal = ZINC_FROM_FOOD + ZINC_FROM_MULTI + suppZinc;
+    const znCuRatio = znTotal / cuTotal;
+    setAll('[data-derived="znCuRatio"]', fmtFr(znCuRatio, 1));
+  }
+
+  // Mise à jour du texte des cibles (au cas où l'utilisateur les a éditées)
+  renderTargets();
 }
 
 // ==================== Profil éditable & valeurs dérivées ====================
@@ -466,9 +753,10 @@ function updateDerived() {
     setAll('[data-derived="oleagPctKcal"]', fmt((oleagKcal / total.kcal) * 100));
   }
 
-  // Glucides des dattes (~80% du poids ≈ 80g/100g)
-  const dattesQty = foods.dattes ? foods.dattes.qty : 0;
-  setAll('[data-derived="dattesGluc"]', fmt(dattesQty * 8));
+  // Glucides des dattes (Medjool ~16 g nets / pièce 24 g — CIQUAL)
+  const dattesFood = foods.dattes;
+  const dattesGluc = dattesFood ? dattesFood.qty * (dattesFood.gluc || 0) : 0;
+  setAll('[data-derived="dattesGluc"]', fmt(dattesGluc));
 
   // Sodium / potassium — ratios et pourcentages
   const naK = total.k > 0 ? total.na / total.k : 0;
@@ -1024,13 +1312,24 @@ function updateNutritionStats() {
   const gluc  = total.gluc;
 
   // ---- Répartition énergétique : protéines / glucides / lipides ----
+  // Préférer les lipides RÉELS (table MICRONUTRIENTS) si disponibles, sinon
+  // estimer par solde énergétique (legacy).
   const kcalProt = prot * 4;
   const kcalGluc = gluc * 4;
-  const kcalLip  = Math.max(0, kcal - kcalProt - kcalGluc);
-  const lipG     = kcalLip / 9;
-  const protPct  = kcal > 0 ? (kcalProt / kcal) * 100 : 0;
-  const glucPct  = kcal > 0 ? (kcalGluc / kcal) * 100 : 0;
-  const lipPct   = kcal > 0 ? (kcalLip  / kcal) * 100 : 0;
+  const lipReal  = (typeof MICRONUTRIENTS !== 'undefined' && total.lip > 0) ? total.lip : 0;
+  let kcalLip, lipG;
+  if (lipReal > 0) {
+    lipG     = lipReal;
+    kcalLip  = lipG * 9;
+  } else {
+    kcalLip  = Math.max(0, kcal - kcalProt - kcalGluc);
+    lipG     = kcalLip / 9;
+  }
+  // Base = somme des macros (pas le kcal alimentaire saisi) → garantit P%+G%+L%=100
+  const kcalBase = kcalProt + kcalGluc + kcalLip;
+  const protPct  = kcalBase > 0 ? (kcalProt / kcalBase) * 100 : 0;
+  const glucPct  = kcalBase > 0 ? (kcalGluc / kcalBase) * 100 : 0;
+  const lipPct   = kcalBase > 0 ? (kcalLip  / kcalBase) * 100 : 0;
 
   setAll('[data-derived="kcalProt"]',    `~${fmt(kcalProt)}`);
   setAll('[data-derived="kcalGluc"]',    `~${fmt(kcalGluc)}`);
@@ -1044,6 +1343,20 @@ function updateNutritionStats() {
     const pct = k === 'prot' ? protPct : k === 'gluc' ? glucPct : lipPct;
     el.style.width = pct.toFixed(1) + '%';
   });
+  // Coloration des % macros selon MACRO_SPLIT_TARGET (cible % éditable)
+  const macroPctValues = { prot: protPct, gluc: glucPct, lip: lipPct };
+  for (const macro of ['prot','gluc','lip']) {
+    const t = MACRO_SPLIT_TARGET[macro];
+    if (!t || !Array.isArray(t.good)) continue;
+    const v = macroPctValues[macro];
+    let status = 'ok';
+    const [lo, hi] = t.good;
+    if (v < lo || v > hi) {
+      status = (t.warnLow !== undefined && v < t.warnLow) || (t.warnHigh !== undefined && v > t.warnHigh)
+                ? 'bad' : 'warn';
+    }
+    applyStatusClass(`[data-derived="kcal${macro.charAt(0).toUpperCase()+macro.slice(1)}Pct"]`, status);
+  }
 
   // ---- Sources de protéines ----
   const sourceTotals = PROT_SOURCES.map(src => ({
@@ -1153,11 +1466,14 @@ function updateNutritionStats() {
 }
 
 function resetFoods() {
-  if (!confirm('Réinitialiser toutes les quantités (aliments + suppléments) aux valeurs par défaut ?')) return;
+  if (!confirm('Réinitialiser toutes les quantités (aliments + suppléments + mix oléagineux) aux valeurs par défaut ?')) return;
   foods = JSON.parse(JSON.stringify(defaultFoods));
   supplements = JSON.parse(JSON.stringify(defaultSupplements));
+  mixOleagineux = JSON.parse(JSON.stringify(defaultMixOleagineux));
   try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
   try { localStorage.removeItem(SUPPLEMENTS_KEY); } catch(e) {}
+  try { localStorage.removeItem(MIX_OLEAGINEUX_KEY); } catch(e) {}
+  applyMixOleagineuxToFoods();
   renderAlimentsList();
   updateAll();
   showSaveStatus('✓ Réinitialisé');
@@ -1175,19 +1491,65 @@ function downloadBlob(content, filename, mime) {
   URL.revokeObjectURL(url);
 }
 
-async function saveAsDefaults() {
-  if (!confirm(
-    'Enregistrer les valeurs actuelles (aliments, suppléments, profil) comme nouveaux défauts ?\n\n'
-    + 'Deux fichiers vont être téléchargés : dashboard-sante.html et dashboard-sante-config.js.\n'
-    + 'Remplacez vos fichiers locaux pour rendre les changements permanents — les nouveaux défauts seront utilisés au prochain chargement et lors d\'un « Réinitialiser ».'
-  )) return;
-
-  showSaveStatus('… Génération…');
-  try {
+// Lit dashboard-sante.html + assets/dashboard-sante-config.js en gérant file://
+// et HTTP. En file:// + Chromium, on ouvre showDirectoryPicker (mode readwrite)
+// pour pouvoir aussi écraser les fichiers en place. Renvoie un dirHandle non-null
+// uniquement quand on peut écrire directement (file:// + FS API).
+async function readSourcesForSaveAsDefaults() {
+  if (location.protocol !== 'file:') {
     const [htmlText, configText] = await Promise.all([
       fetch('dashboard-sante.html', { cache:'no-store' }).then(r => { if (!r.ok) throw new Error('HTML introuvable'); return r.text(); }),
       fetch('assets/dashboard-sante-config.js', { cache:'no-store' }).then(r => { if (!r.ok) throw new Error('Config JS introuvable'); return r.text(); })
     ]);
+    return { htmlText, configText, dirHandle: null };
+  }
+  if (!('showDirectoryPicker' in window)) {
+    throw new Error('En file://, ce navigateur ne supporte pas l\'écriture directe. Lance un serveur local (python3 -m http.server) ou utilise Chromium.');
+  }
+  showSaveStatus('… Sélectionne le dossier "routines"');
+  const dirHandle = await window.showDirectoryPicker({ mode: 'readwrite', id: 'dashboard-sante-project' });
+  // Localise dashboard-sante.html (à la racine choisie ou un niveau plus bas)
+  let root = dirHandle;
+  try { await root.getFileHandle('dashboard-sante.html'); }
+  catch {
+    let found = null;
+    for await (const entry of dirHandle.values()) {
+      if (entry.kind === 'directory') {
+        try { await entry.getFileHandle('dashboard-sante.html'); found = entry; break; }
+        catch {}
+      }
+    }
+    if (!found) throw new Error('dashboard-sante.html introuvable dans le dossier choisi.');
+    root = found;
+  }
+  const assets = await root.getDirectoryHandle('assets');
+  const [htmlFile, configFile] = await Promise.all([
+    root.getFileHandle('dashboard-sante.html').then(h => h.getFile()),
+    assets.getFileHandle('dashboard-sante-config.js').then(h => h.getFile()),
+  ]);
+  const [htmlText, configText] = await Promise.all([htmlFile.text(), configFile.text()]);
+  return { htmlText, configText, dirHandle: root, assetsHandle: assets };
+}
+
+async function writeFileToHandle(dirHandle, name, content) {
+  const fh = await dirHandle.getFileHandle(name, { create: false });
+  const w = await fh.createWritable();
+  await w.write(content);
+  await w.close();
+}
+
+async function saveAsDefaults() {
+  if (!confirm(
+    'Enregistrer les valeurs actuelles (aliments, suppléments, profil) comme nouveaux défauts ?\n\n'
+    + (location.protocol === 'file:'
+        ? 'En file:// : tu vas choisir le dossier "routines" et les deux fichiers seront RÉÉCRITS sur place (dashboard-sante.html + assets/dashboard-sante-config.js).\n\n'
+        : 'Deux fichiers vont être téléchargés : dashboard-sante.html et dashboard-sante-config.js.\n')
+    + 'Les nouveaux défauts seront utilisés au prochain chargement et lors d\'un « Réinitialiser ».'
+  )) return;
+
+  showSaveStatus('… Génération…');
+  try {
+    const { htmlText, configText, dirHandle, assetsHandle } = await readSourcesForSaveAsDefaults();
 
     // ---- 1. Patch CONFIG : defaultFoods / defaultSupplements / defaultProfile ----
     const escapeId = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -1238,23 +1600,68 @@ async function saveAsDefaults() {
     newHtml = replaceAttr(newHtml, 'data-edit-food',    id  => foods[id]       ? fmtFoodFr(foods[id].qty)       : null);
     newHtml = replaceAttr(newHtml, 'data-supp-display', id  => supplements[id] ? fmtSupp(id, supplements[id].qty) : null);
 
-    // ---- 3. Téléchargements ----
-    downloadBlob(newHtml,   'dashboard-sante.html',         'text/html;charset=utf-8');
-    setTimeout(() => downloadBlob(newConfig, 'dashboard-sante-config.js', 'application/javascript;charset=utf-8'), 250);
-    showSaveStatus('✓ Fichiers téléchargés');
+    // ---- 3. Écriture : directe via FS API (file://) ou téléchargement (HTTP) ----
+    if (dirHandle && assetsHandle) {
+      await writeFileToHandle(dirHandle,    'dashboard-sante.html',      newHtml);
+      await writeFileToHandle(assetsHandle, 'dashboard-sante-config.js', newConfig);
+      showSaveStatus('✓ Sources mises à jour sur disque');
+    } else {
+      downloadBlob(newHtml,   'dashboard-sante.html',         'text/html;charset=utf-8');
+      setTimeout(() => downloadBlob(newConfig, 'dashboard-sante-config.js', 'application/javascript;charset=utf-8'), 250);
+      showSaveStatus('✓ Fichiers téléchargés');
+    }
   } catch (err) {
     showSaveStatus('✗ ' + err.message);
     alert('Erreur lors de la génération : ' + err.message);
   }
 }
 
+// Met à jour les pourcentages + qty dérivées affichés à droite des inputs de
+// parts, sans re-rendre toute la liste (préserve le focus sur l'input actif).
+function refreshMixDerivedDisplay() {
+  const sum = mixPartsSum();
+  const sumEl = document.querySelector('[data-mix-sum]');
+  if (sumEl) sumEl.textContent = `somme parts : ${Math.round(sum * 10) / 10}`;
+  for (const id of MIX_OLEAGINEUX_IDS) {
+    const f = foods[id];
+    if (!f) continue;
+    const part = mixOleagineux.parts[id] || 0;
+    const pct  = sum > 0 ? (part / sum * 100) : 0;
+    const span = document.querySelector(`[data-mix-derived="${id}"]`);
+    if (span) span.textContent = `${pct.toFixed(1)}% → ${f.qty}${f.unit}`;
+  }
+}
+
 let saveDebounce = null;
 let saveSuppDebounce = null;
+let saveMixDebounce = null;
 document.addEventListener('input', e => {
   if (!e.target.classList || !e.target.classList.contains('qty-input')) return;
   const t = e.target;
   const v = parseFloat(t.value);
   const safe = isFinite(v) && v >= 0 ? v : 0;
+
+  // Mix oléagineux : total ou part → recalcule les qty dérivées + sauvegarde
+  if (t.dataset.mixTotalInput !== undefined) {
+    mixOleagineux.total = safe;
+    applyMixOleagineuxToFoods();
+    refreshMixDerivedDisplay();
+    updateAll();
+    clearTimeout(saveMixDebounce);
+    saveMixDebounce = setTimeout(() => { saveMixOleagineux(); saveFoodsToStorage(); }, 300);
+    return;
+  }
+  if (t.dataset.mixPartInput) {
+    const id = t.dataset.mixPartInput;
+    mixOleagineux.parts[id] = safe;
+    applyMixOleagineuxToFoods();
+    refreshMixDerivedDisplay();
+    updateAll();
+    clearTimeout(saveMixDebounce);
+    saveMixDebounce = setTimeout(() => { saveMixOleagineux(); saveFoodsToStorage(); }, 300);
+    return;
+  }
+
   if (t.dataset.suppId) {
     supplements[t.dataset.suppId].qty = safe;
     updateAll();
@@ -1526,9 +1933,14 @@ loadProfile();
 loadFoodsFromStorage();
 loadSupplements();
 loadChecklist();
+loadMixOleagineux();
+loadTargets();
+applyMixOleagineuxToFoods();  // dérive qty[noix/...] depuis mixOleagineux
 applyDefaultsMigration();
 renderAlimentsList();
 renderProfile();
+renderTargets();
+bindTargetEditors();
 updateAll();
 ensureTlIds();
 applyAllSavedOrders();
@@ -1552,6 +1964,293 @@ function applyDefaultsMigration() {
     }
     localStorage.setItem(KEY, '1');
   } catch (e) {}
+}
+
+// ==================== EXPORT MARKDOWN (analyse IA) ====================
+// Bouton 📋 du header : copie tout le contenu du dashboard en markdown dans
+// le presse-papiers, pour qu'une IA reçoive le contexte complet en un paste.
+// Inclut : profil, totaux calculés, table aliments + suppléments, checklist
+// du jour, ET le contenu intégral de chaque onglet (routine, nutrition,
+// vigilance, optimisation, tests, interactions, symptômes, jeûne).
+
+const MD_TAB_LABELS = {
+  routine: 'Routine quotidienne', aliments: 'Aliments — quantités',
+  supplements: 'Suppléments — détail des produits', nutrition: 'Nutrition',
+  optimisation: 'Optimisation', vigilance: 'Vigilance', tests: 'Tests',
+  interactions: 'Interactions', symptoms: 'Symptômes', jeune: 'Jeûne'
+};
+
+function condense(s) { return (s || '').replace(/\s+/g, ' ').trim(); }
+
+// Convertit un sous-arbre DOM en markdown. Visiteur récursif avec quelques
+// cas spéciaux pour les cartes structurées du dashboard.
+function nodeToMarkdown(root, depth = 2) {
+  const lines = [];
+  const SKIP_TAGS = new Set(['SCRIPT', 'STYLE', 'INPUT', 'BUTTON', 'LABEL']);
+  const SKIP_CLASSES = new Set([
+    'tabs', 'checklist-header', 'aliment-actions', 'cl-actions',
+    'icon-btn', 'tl-tags', 'vig-meter', 'vig-chevron', 'vig-severity',
+    'supp-badge', 'stat-card-mini-wrap'
+  ]);
+  const skipById = new Set(['aliments-list']); // déjà en table dédiée
+
+  function walk(node, hLevel) {
+    if (node.nodeType === Node.TEXT_NODE) {
+      const t = condense(node.textContent);
+      if (t) lines.push(t + ' ');
+      return;
+    }
+    if (node.nodeType !== Node.ELEMENT_NODE) return;
+    if (SKIP_TAGS.has(node.tagName)) return;
+    if (node.id && skipById.has(node.id)) return;
+    if (node.classList) {
+      for (const cls of SKIP_CLASSES) if (node.classList.contains(cls)) return;
+    }
+
+    // Cartes spécialisées
+    if (node.classList && node.classList.contains('tl-card')) {
+      const time  = condense(node.querySelector('.tl-time')  && node.querySelector('.tl-time').textContent);
+      const title = condense(node.querySelector('.tl-title') && node.querySelector('.tl-title').textContent);
+      const desc  = condense(node.querySelector('.tl-desc')  && node.querySelector('.tl-desc').textContent);
+      const tags  = Array.from(node.querySelectorAll('.tl-tags .tag')).map(t => condense(t.textContent)).join(' · ');
+      const warn  = condense(node.querySelector('.warn-box') && node.querySelector('.warn-box').textContent);
+      lines.push(`\n${'#'.repeat(hLevel + 1)} ${time}${time && title ? ' — ' : ''}${title}\n\n`);
+      if (desc) lines.push(desc + '\n\n');
+      if (warn) lines.push(`> ${warn}\n\n`);
+      if (tags) lines.push(`*${tags}*\n\n`);
+      return;
+    }
+    if (node.classList && node.classList.contains('vig-card')) {
+      const titleEl = node.querySelector('.vig-card-head h4');
+      const subEl   = node.querySelector('.vig-subtitle');
+      const lvlEl   = node.querySelector('.vig-level');
+      const bodyEl  = node.querySelector('.vig-body-inner') || node.querySelector('.vig-body');
+      const title = condense(titleEl && titleEl.textContent);
+      const subt  = condense(subEl && subEl.textContent);
+      const lvl   = condense(lvlEl && lvlEl.textContent);
+      lines.push(`\n${'#'.repeat(hLevel + 1)} ${title}${lvl ? ` *(niveau : ${lvl})*` : ''}\n\n`);
+      if (subt) lines.push(subt + '\n\n');
+      if (bodyEl) {
+        const advice = bodyEl.querySelector('[data-vig-advice]');
+        if (advice) lines.push(condense(advice.textContent) + '\n\n');
+        // labels des meters
+        bodyEl.querySelectorAll('.vig-meter-label').forEach(m => {
+          lines.push(`- ${condense(m.textContent)}\n`);
+        });
+        if (bodyEl.querySelector('.vig-meter-label')) lines.push('\n');
+      }
+      return;
+    }
+    if (node.classList && node.classList.contains('supp-card')) {
+      const name  = condense(node.querySelector('.supp-name')  && node.querySelector('.supp-name').textContent);
+      const brand = condense(node.querySelector('.supp-brand') && node.querySelector('.supp-brand').textContent);
+      lines.push(`\n${'#'.repeat(hLevel + 1)} ${name}${brand ? ` — *${brand}*` : ''}\n\n`);
+      node.querySelectorAll('.supp-detail').forEach(d => {
+        const dl = condense(d.querySelector('.dl') && d.querySelector('.dl').textContent);
+        const dv = condense(d.querySelector('.dv') && d.querySelector('.dv').textContent);
+        if (dl && dv) lines.push(`- **${dl}** : ${dv}\n`);
+      });
+      const reason = node.querySelector('.supp-reason');
+      if (reason) lines.push(`\n${condense(reason.textContent)}\n\n`);
+      else lines.push('\n');
+      return;
+    }
+    if (node.classList && (node.classList.contains('info-box') || node.classList.contains('warn-box'))) {
+      const marker = node.classList.contains('warn-box') ? '⚠️' : 'ℹ️';
+      lines.push(`\n> ${marker} ${condense(node.textContent)}\n\n`);
+      return;
+    }
+    if (node.classList && (
+        node.classList.contains('stats-row') ||
+        node.classList.contains('totals-bar')
+    )) {
+      // Snapshot inline des stat-cards (val + label)
+      const cells = [];
+      node.querySelectorAll('.stat-card, .t-cell').forEach(c => {
+        const valEl = c.querySelector('.val, .t-val');
+        const lblEl = c.querySelector('.label, .t-lbl');
+        const v = condense(valEl && valEl.textContent);
+        const l = condense(lblEl && lblEl.textContent);
+        if (v && l) cells.push(`- **${l}** : ${v}`);
+      });
+      if (cells.length) lines.push('\n' + cells.join('\n') + '\n\n');
+      return;
+    }
+
+    // Headings → markdown
+    const tag = node.tagName;
+    if (/^H[1-6]$/.test(tag)) {
+      const lvl = Math.min(parseInt(tag[1], 10) + Math.max(0, hLevel - 2), 6);
+      lines.push(`\n${'#'.repeat(lvl)} ${condense(node.textContent)}\n\n`);
+      return;
+    }
+    if (tag === 'P') {
+      const txt = condense(node.textContent);
+      if (txt) lines.push(txt + '\n\n');
+      return;
+    }
+    if (tag === 'UL' || tag === 'OL') {
+      const items = Array.from(node.children).filter(c => c.tagName === 'LI');
+      const ordered = tag === 'OL';
+      items.forEach((li, i) => {
+        lines.push(`${ordered ? `${i+1}.` : '-'} ${condense(li.textContent)}\n`);
+      });
+      lines.push('\n');
+      return;
+    }
+    if (tag === 'TABLE') {
+      const rows = Array.from(node.querySelectorAll('tr'));
+      if (rows.length) {
+        rows.forEach((row, i) => {
+          const cells = Array.from(row.children).map(c => condense(c.textContent).replace(/\|/g, '\\|'));
+          lines.push('| ' + cells.join(' | ') + ' |\n');
+          if (i === 0) lines.push('|' + cells.map(() => '---').join('|') + '|\n');
+        });
+        lines.push('\n');
+      }
+      return;
+    }
+    if (tag === 'BR') { lines.push('\n'); return; }
+    if (tag === 'STRONG' || tag === 'B') {
+      const txt = condense(node.textContent);
+      if (txt) lines.push(`**${txt}** `);
+      return;
+    }
+
+    // Conteneur générique : récursion sur les enfants
+    for (const child of node.childNodes) walk(child, hLevel);
+  }
+
+  walk(root, depth);
+  return lines.join('').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
+}
+
+function buildRoutineMarkdown() {
+  const stamp = new Date().toISOString().slice(0, 10);
+  const allIds = Object.keys(foods);
+  const t = compute(allIds);
+  const w = profile.weight || 1;
+  const protPerKg = (t.prot / w).toFixed(2);
+
+  const out = [];
+  out.push(`# Routine Santé — ${stamp}`, '');
+
+  // ── Profil ───────────────────────────────────────────────────────────────
+  out.push('## Profil');
+  out.push(`- Sexe : ${profile.sex}`);
+  out.push(`- Poids : ${profile.weight} kg`);
+  out.push(`- Taille : ${profile.height} cm`);
+  out.push(`- Eau : ${profile.water} L/j`);
+  out.push(`- Sport : ${profile.sportHours} h/semaine`);
+  out.push('');
+
+  // ── Totaux calculés ──────────────────────────────────────────────────────
+  out.push('## Apports journaliers (totaux calculés)');
+  out.push(`- Énergie : ~${fmt(t.kcal)} kcal`);
+  out.push(`- Protéines : ~${fmt(t.prot, 1)} g (${protPerKg} g/kg)`);
+  out.push(`- Glucides : ~${fmt(t.gluc, 1)} g`);
+  out.push(`- Fibres : ~${fmt(t.fibre, 1)} g`);
+  out.push(`- Potassium : ~${fmt(t.k)} mg`);
+  out.push(`- Sodium : ~${fmt(t.na)} mg`);
+  out.push(`- Vit C : ~${fmt(t.vitC)} mg`);
+  out.push('');
+
+  // ── Aliments par groupe (table) ──────────────────────────────────────────
+  out.push('## Aliments — quantités configurées');
+  out.push('');
+  for (const group of foodGroups) {
+    out.push(`### ${group.title}`);
+    out.push('| Aliment | Quantité | Unité |');
+    out.push('|---------|----------|-------|');
+    for (const id of group.ids) {
+      const f = foods[id];
+      if (!f) continue;
+      out.push(`| ${f.name} | ${f.qty} | ${f.unit} |`);
+    }
+    out.push('');
+  }
+
+  // ── Suppléments — table compacte ────────────────────────────────────────
+  out.push('## Suppléments — doses / jour');
+  out.push('| Supplément | Dose | Unité | Note |');
+  out.push('|------------|------|-------|------|');
+  for (const id of Object.keys(supplements)) {
+    const s = supplements[id];
+    const note = (s.hint || '').replace(/\|/g, '\\|');
+    out.push(`| ${s.name} | ${s.qty} | ${s.unit}/j | ${note} |`);
+  }
+  out.push('');
+
+  // ── Checklist du jour ────────────────────────────────────────────────────
+  if (checklist && checklist.date === todayKey()) {
+    const items = checklist.items || {};
+    let totalDone = 0, totalAll = 0;
+    const blocks = [];
+    for (const tabId of REORDERABLE_TABS) {
+      const tab = document.getElementById(tabId);
+      if (!tab) continue;
+      const cards = tab.querySelectorAll('.tl-card[data-check-id]');
+      if (!cards.length) continue;
+      const block = [`### ${tabId === 'routine' ? 'Routine' : 'Jeûne'}`];
+      cards.forEach(card => {
+        const id      = card.dataset.checkId;
+        const timeEl  = card.querySelector('.tl-time');
+        const titleEl = card.querySelector('.tl-title');
+        const time    = timeEl  ? condense(timeEl.textContent)  : '';
+        const title   = titleEl ? condense(titleEl.textContent) : '';
+        const done    = !!items[id];
+        if (done) totalDone++;
+        totalAll++;
+        block.push(`- [${done ? 'x' : ' '}] **${time}** — ${title}`);
+      });
+      blocks.push(block.join('\n'));
+    }
+    if (blocks.length) {
+      out.push(`## Checklist du jour (${totalDone}/${totalAll})`);
+      out.push('');
+      out.push(blocks.join('\n\n'));
+      out.push('');
+    }
+  }
+
+  // ── Contenu intégral de chaque onglet ────────────────────────────────────
+  out.push('---');
+  out.push('# Contenu détaillé');
+  out.push('');
+  const tabsOrder = ['routine', 'supplements', 'nutrition', 'optimisation',
+                     'vigilance', 'tests', 'interactions', 'symptoms', 'jeune'];
+  for (const tabId of tabsOrder) {
+    const tab = document.getElementById(tabId);
+    if (!tab) continue;
+    out.push(`## ${MD_TAB_LABELS[tabId] || tabId}`);
+    out.push('');
+    out.push(nodeToMarkdown(tab, 2));
+    out.push('');
+  }
+
+  return out.join('\n').replace(/\n{3,}/g, '\n\n').trim() + '\n';
+}
+
+async function exportRoutineForAI() {
+  const md = buildRoutineMarkdown();
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(md);
+      showSaveStatus('✓ Routine copiée — colle dans une IA');
+      return;
+    }
+  } catch (e) { /* fallback below */ }
+  // Fallback : téléchargement
+  const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `routine-sante-${new Date().toISOString().slice(0, 10)}.md`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showSaveStatus('✓ Routine téléchargée (.md)');
 }
 
 initChecklist();
