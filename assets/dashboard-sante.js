@@ -1304,6 +1304,155 @@ function updateAll() {
   updateNutritionStats();
 }
 
+// ==================== NUTRITION — Tooltip breakdown par aliment ====================
+// Au hover d'une ligne du tableau Nutrition, affiche les aliments qui contribuent
+// le plus à ce nutriment (% du total alimentaire + valeur brute). La clé du
+// nutriment est lue depuis [data-food="<key>"] ou [data-grand="<key>"] de la ligne.
+
+const NUTRI_TIP_ID = 'nutri-breakdown-tooltip';
+const NUTRI_TIP_MAX_ROWS = 8;
+// Macros stockées dans defaultFoods (par g ou par pièce). Le reste vient de MICRONUTRIENTS.
+const NUTRI_MACRO_KEYS = ['kcal','prot','gluc','fibre','vitC','k','na'];
+
+function getFoodDensity(foodId, key) {
+  if (NUTRI_MACRO_KEYS.includes(key)) {
+    return (foods[foodId] && foods[foodId][key]) || 0;
+  }
+  return (typeof MICRONUTRIENTS !== 'undefined' && MICRONUTRIENTS[foodId] && MICRONUTRIENTS[foodId][key]) || 0;
+}
+
+function computeNutrientBreakdown(key) {
+  const items = [];
+  for (const id of Object.keys(foods)) {
+    const f = foods[id];
+    if (!f || !f.qty) continue;
+    const val = getFoodDensity(id, key) * f.qty;
+    if (val > 0) items.push({ id, name: f.name, val });
+  }
+  items.sort((a, b) => b.val - a.val);
+  const total = items.reduce((s, x) => s + x.val, 0);
+  return { items, total };
+}
+
+function getNutrientUnit(key) {
+  if (key === 'kcal') return 'kcal';
+  const t = (typeof TARGETS !== 'undefined') ? TARGETS[key] : null;
+  return (t && t.unit) || '';
+}
+
+function ensureNutriTip() {
+  let tip = document.getElementById(NUTRI_TIP_ID);
+  if (!tip) {
+    tip = document.createElement('div');
+    tip.id = NUTRI_TIP_ID;
+    tip.className = 'nutri-breakdown-tooltip';
+    tip.style.display = 'none';
+    document.body.appendChild(tip);
+  }
+  return tip;
+}
+
+function showNutriTip(key, anchorRect) {
+  const tip = ensureNutriTip();
+  const { items, total } = computeNutrientBreakdown(key);
+  const unit = getNutrientUnit(key);
+
+  if (total <= 0 || items.length === 0) {
+    tip.innerHTML = `<div class="nbt-title">Sources alimentaires</div>
+      <div class="nbt-empty">Aucun apport alimentaire — uniquement via supplément.</div>`;
+  } else {
+    // Décimales : valeurs petites → plus de précision
+    const dec = total < 5 ? 2 : total < 50 ? 1 : 0;
+    const top = items.slice(0, NUTRI_TIP_MAX_ROWS);
+    const others = items.slice(NUTRI_TIP_MAX_ROWS);
+    const othersSum = others.reduce((s, x) => s + x.val, 0);
+
+    let html = `<div class="nbt-title">Sources alimentaires · ${fmtFr(total, dec)} ${unit}</div>`;
+    html += `<div class="nbt-list">`;
+    for (const it of top) {
+      const pct = (it.val / total) * 100;
+      const barW = Math.max(2, pct);
+      const pctDec = pct < 10 ? 1 : 0;
+      html += `<div class="nbt-row">
+        <span class="nbt-bar" style="width:${barW.toFixed(1)}%"></span>
+        <span class="nbt-name">${it.name}</span>
+        <span class="nbt-val">${fmtFr(it.val, dec)} ${unit}</span>
+        <span class="nbt-pct">${pct.toFixed(pctDec)}%</span>
+      </div>`;
+    }
+    if (othersSum > 0) {
+      const pct = (othersSum / total) * 100;
+      const pctDec = pct < 10 ? 1 : 0;
+      html += `<div class="nbt-row nbt-others">
+        <span class="nbt-name">Autres (${others.length})</span>
+        <span class="nbt-val">${fmtFr(othersSum, dec)} ${unit}</span>
+        <span class="nbt-pct">${pct.toFixed(pctDec)}%</span>
+      </div>`;
+    }
+    html += `</div>`;
+    tip.innerHTML = html;
+  }
+
+  tip.style.display = 'block';
+  tip.style.visibility = 'hidden';
+  tip.style.top = '0px';
+  tip.style.left = '0px';
+  const tipRect = tip.getBoundingClientRect();
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const gap = 14;
+
+  // Placement préféré : à droite de la ligne. Sinon à gauche. Sinon sous la ligne.
+  let left = anchorRect.right + gap;
+  if (left + tipRect.width > vw - 12) {
+    left = anchorRect.left - tipRect.width - gap;
+  }
+  if (left < 12) {
+    left = Math.max(12, Math.min(anchorRect.left, vw - tipRect.width - 12));
+  }
+  let top = anchorRect.top + (anchorRect.height / 2) - (tipRect.height / 2);
+  if (top < 8) top = 8;
+  if (top + tipRect.height > vh - 8) top = vh - tipRect.height - 8;
+
+  tip.style.top = (top + window.scrollY) + 'px';
+  tip.style.left = (left + window.scrollX) + 'px';
+  tip.style.visibility = 'visible';
+}
+
+function hideNutriTip() {
+  const tip = document.getElementById(NUTRI_TIP_ID);
+  if (tip) tip.style.display = 'none';
+}
+
+function initNutriTooltips() {
+  const nutritionTab = document.getElementById('nutrition');
+  if (!nutritionTab) return;
+
+  // Marquer toutes les lignes qui ont une clé nutriment connue
+  nutritionTab.querySelectorAll('.nutri-table tbody tr').forEach(tr => {
+    const foodSpan  = tr.querySelector('[data-food]');
+    const grandSpan = tr.querySelector('[data-grand]');
+    const key = (foodSpan && foodSpan.dataset.food) || (grandSpan && grandSpan.dataset.grand);
+    if (!key) return;
+    tr.dataset.nutriTipKey = key;
+    tr.classList.add('nutri-row-hoverable');
+  });
+
+  nutritionTab.addEventListener('mouseover', e => {
+    const tr = e.target.closest('tr');
+    if (!tr || !tr.dataset.nutriTipKey) return;
+    showNutriTip(tr.dataset.nutriTipKey, tr.getBoundingClientRect());
+  });
+  nutritionTab.addEventListener('mouseout', e => {
+    const tr = e.target.closest('tr');
+    if (!tr || !tr.dataset.nutriTipKey) return;
+    const related = e.relatedTarget;
+    if (related && tr.contains(related)) return;
+    hideNutriTip();
+  });
+  window.addEventListener('scroll', hideNutriTip, { passive: true });
+}
+
 // ==================== NUTRITION — Stats globales (kcal split, prot sources, BCAA, oméga) ====================
 function updateNutritionStats() {
   const total = compute(Object.keys(foods));
@@ -2006,6 +2155,7 @@ bindTargetEditors();
 updateAll();
 ensureTlIds();
 applyAllSavedOrders();
+initNutriTooltips();
 
 // Migration ponctuelle : pour les utilisateurs qui ont un profil/supp. sauvegardé
 // avec les anciens défauts, on bascule vers les nouveaux (sportHours 10→9, zinc 25→12.5).

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr" data-snapshot="2026-05-22">
+<html lang="fr" data-snapshot="2026-05-27">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard Santé — Snapshot 2026-05-22</title>
+<title>Dashboard Santé — Snapshot 2026-05-27</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/dashboard-sante.css">
 </head>
@@ -57,11 +57,17 @@
   <p class="section-sub" style="margin:0 0 14px;font-size:12px;color:var(--text-faint);">💡 Glissez-déposez les cartes pour réorganiser vos prises. L'ordre est sauvegardé automatiquement.</p>
 
   <div class="timeline">
-    <div class="tl-item"><div class="tl-card" data-foods="linMoulu">
+    <div class="tl-item"><div class="tl-card">
       <div class="tl-time">Réveil</div>
-      <div class="tl-title">Eau + Graines de lin moulues</div>
-      <div class="tl-desc">0,5L eau + <span data-qty="linMoulu">15</span>g graines de lin fraîchement moulues. À jeun, juste après le réveil. Lignanes (phyto-œstrogènes les + concentrés du règne végétal), oméga-3 ALA, fibres solubles (mucilage). Moudre juste avant consommation (les ALA s'oxydent en quelques heures sinon). Stocker les graines entières à l'abri de la lumière, idéalement au congélateur.</div>
-      <div class="tl-tags"><span class="tag tag-kcal" data-metric="kcal">~80 kcal</span><span class="tag tag-blue" data-metric="fibre">Fibres ~4g</span><span class="tag tag-green">ALA + Lignanes</span><span class="tag tag-orange" data-metric="gluc">Glucides ~4g</span></div>
+      <div class="tl-title">Eau tiède</div>
+      <div class="tl-desc">0,5L d'eau à ~40°C, à jeun juste après le réveil. Réhydrate après la nuit et active en douceur la motilité digestive.</div>
+      <div class="tl-tags"><span class="tag tag-kcal">0 kcal</span><span class="tag tag-blue">Hydratation</span></div>
+    </div></div>
+    <div class="tl-item"><div class="tl-card" data-foods="sesame,chia,linMoulu">
+      <div class="tl-time">Quelques min après</div>
+      <div class="tl-title">Eau tiède + Graines mixées (sésame, chia, lin)</div>
+      <div class="tl-desc">0,5L d'eau à ~40°C + <span data-qty="sesame">15</span>g sésame complet moulu + <span data-qty="chia">15</span>g graines de chia + <span data-qty="linMoulu">15</span>g graines de lin fraîchement moulues, mixés ensemble. À jeun. <strong>Lin</strong> : lignanes (phyto-œstrogènes les + concentrés du règne végétal), oméga-3 ALA, mucilage. <strong>Chia</strong> : mucilage hydratant, ALA, fibres solubles. <strong>Sésame</strong> : ~975 mg Ca/100g (15g = +~146 mg Ca/j), lignanes et phytostérols — moudre frais sinon les graines entières passent intactes (Ca non bio-disponible). Moudre sésame + lin juste avant consommation (ALA et lignanes s'oxydent en quelques heures). Stocker les graines entières au congélateur.</div>
+      <div class="tl-tags"><span class="tag tag-kcal" data-metric="kcal">~240 kcal</span><span class="tag tag-blue" data-metric="fibre">Fibres ~11g</span><span class="tag tag-green">ALA + Lignanes + Ca</span><span class="tag tag-orange" data-metric="gluc">Glucides ~3g</span></div>
     </div></div>
     <div class="tl-item"><div class="tl-card" data-foods="oeufs,patateDouce,champignons,courgettes,huileOlivePD">
       <div class="tl-time">Petit-déjeuner</div>
@@ -69,12 +75,6 @@
       <div class="tl-desc"><span data-qty="oeufs">3</span> œufs bio poêlés + <span data-qty="patateDouce">150</span>g patate douce + <span data-qty="champignons">50</span>g champignons de Paris poêlés + <span data-qty="courgettes">80</span>g courgettes poêlées + 2 càs huile d'olive extra + épices + ~100ml eau. Champignons : sélénium, ergothionéine (antioxydant unique), vit D (si exposés UV), B2/B3/B5. Courgettes : potassium, vit C, faible densité énergétique → satiété sans alourdir.</div>
       <div class="tl-tags"><span class="tag tag-kcal" data-metric="kcal">~650-720 kcal</span><span class="tag tag-purple" data-metric="prot">Protéines ~27g</span><span class="tag tag-green" data-metric="k">Potassium ~1 586mg</span><span class="tag tag-blue" data-metric="vitC">Vit C ~124mg</span><span class="tag tag-warn" data-metric="na">Sodium ~?mg</span><span class="tag tag-orange" data-metric="gluc">Glucides ~50g</span></div>
       <div class="warn-box" style="margin-top:12px;"><strong>Suppléments :</strong> Vit4ever Premium Multi (2 caps) · CoQ10 Zenement (200mg) · Oméga-3 Zenement IFOS · D3+K2 Vit4ever Depot — tous liposolubles, absorption optimisée par œufs + huile olive (~43g lipides).</div>
-    </div></div>
-    <div class="tl-item"><div class="tl-card" data-foods="chia">
-      <div class="tl-time">+ 1h</div>
-      <div class="tl-title">Hydratation lente + Chia</div>
-      <div class="tl-desc">500ml eau + <span data-qty="chia">15</span>g graines de chia trempées toute la nuit. Le mucilage libère l'eau lentement. Le potassium du petit-déj est déjà en circulation pour équilibrer le sodium.</div>
-      <div class="tl-tags"><span class="tag tag-kcal" data-metric="kcal">~140-160 kcal</span><span class="tag tag-blue" data-metric="fibre">Fibres ~10g</span><span class="tag tag-warn" data-metric="na">Sodium ~?mg</span><span class="tag tag-green">Hydratation lente</span></div>
     </div></div>
     <div class="tl-item"><div class="tl-card" data-foods="clousGirofle">
       <div class="tl-time">+ 1h</div>
@@ -88,10 +88,10 @@
       <div class="tl-desc">0,5L eau + 10g créatine monohydrate + 2g taurine (poudre Vit4ever) + <span data-qty="dattes">0</span>g de dattes (Deglet Nour ou équivalent). AVANT les oléagineux — meilleure absorption sur estomac moins chargé en graisses. Double osmolyte (créatine + taurine) pour l'hydratation cellulaire. Pic d'insuline des dattes améliore l'absorption.</div>
       <div class="tl-tags"><span class="tag tag-kcal" data-metric="kcal">~70-90 kcal</span><span class="tag tag-purple">Créatine 10g</span><span class="tag tag-green">Taurine 2g</span><span class="tag tag-blue" data-metric="k">Potassium ~200mg</span><span class="tag tag-orange" data-metric="gluc">Glucides ~24g</span></div>
     </div></div>
-    <div class="tl-item"><div class="tl-card" data-foods="noix,noixBresil,noisettes,grainesCourge,amandes,nigelle,sesame,huileOliveOl,chocolat70">
+    <div class="tl-item"><div class="tl-card" data-foods="noix,noixBresil,noisettes,grainesCourge,amandes,nigelle,huileOliveOl,chocolat70">
       <div class="tl-time">Quelques min après</div>
       <div class="tl-title">Oléagineux + Huile d'olive + Chocolat noir</div>
-      <div class="tl-desc"><span data-derived="oleagineuxTotal">110</span>g mix (<span data-qty="noix">43.2</span>g noix + <span data-qty="noixBresil">8.6</span>g noix du Brésil + <span data-qty="noisettes">4.3</span>g noisettes + <span data-qty="grainesCourge">8.6</span>g graines de courge + <span data-qty="amandes">4.3</span>g amandes + <span data-qty="nigelle">2.2</span>g nigelle + <span data-qty="sesame">8.6</span>g sésame complet moulu) + 2 càs huile d'olive extra + <span data-qty="chocolat70">20</span>g chocolat noir 70%. <strong>Sésame :</strong> moudre frais (les graines entières passent intactes — Ca, lignanes et phytostérols non bio-disponibles sinon). ~975 mg Ca/100g de sésame complet = +<strong>~100 mg Ca/j</strong>, comble le seul trou nutritionnel notable.</div>
+      <div class="tl-desc"><span data-derived="oleagineuxTotal">71</span>g mix (<span data-qty="noix">38.1</span>g noix + <span data-qty="noixBresil">7.6</span>g noix du Brésil + <span data-qty="noisettes">7.6</span>g noisettes + <span data-qty="grainesCourge">15.2</span>g graines de courge + <span data-qty="amandes">7.6</span>g amandes + <span data-qty="nigelle">3.8</span>g nigelle) + 2 càs huile d'olive extra + <span data-qty="chocolat70">20</span>g chocolat noir 70%. Le sésame est désormais pris séparément avec le chia et le lin au créneau « eau tiède + graines mixées » (apport Ca + lignanes + phytostérols dissocié des phytates des oléagineux).</div>
       <div class="tl-tags"><span class="tag tag-kcal" data-metric="kcal">~950-1 050 kcal</span><span class="tag tag-green">Lipides qualité</span><span class="tag tag-blue">Mg + Sélénium</span><span class="tag tag-purple">Polyphénols</span><span class="tag tag-orange" data-metric="gluc">Glucides ~28g</span></div>
     </div></div>
     <div class="tl-item"><div class="tl-card">

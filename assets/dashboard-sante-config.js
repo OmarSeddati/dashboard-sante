@@ -42,13 +42,13 @@ const defaultFoods = {
   chia:          { name:'Graines de chia',           qty:15,  unit:'g',     step:5,   kcal:4.86,  prot:0.17,  k:4.07,  fibre:0.34,  vitC:0,     na:0.16, gluc:0.077  },
   linMoulu:      { name:'Graines de lin moulues',    qty:15,  unit:'g',     step:1,   kcal:5.34,  prot:0.18,  k:8.13,  fibre:0.27,  vitC:0,     na:0.30, gluc:0.016  },
   dattes:        { name:'Dattes (Deglet Nour)',      qty:0,  unit:'g',     step:5,   kcal:2.82,  prot:0.0245,k:6.56,  fibre:0.08,  vitC:0.004,          gluc:0.67   },
-  noix:          { name:'Noix',                      qty:43.2,  unit:'g',     step:5,   kcal:6.54,  prot:0.15,  k:4.41,  fibre:0.067, vitC:0,              gluc:0.069  },
-  noixBresil:    { name:'Noix du Brésil',            qty:8.6,   unit:'g',     step:1,   kcal:6.56,  prot:0.14,  k:6.59,  fibre:0.075, vitC:0,              gluc:0.053  },
-  noisettes:     { name:'Noisettes',                 qty:4.3,  unit:'g',     step:1,   kcal:6.28,  prot:0.15,  k:6.80,  fibre:0.097, vitC:0,              gluc:0.072  },
-  grainesCourge: { name:'Graines de courge',         qty:8.6,  unit:'g',     step:1,   kcal:5.59,  prot:0.30,  k:8.09,  fibre:0.06,  vitC:0,              gluc:0.045  },
-  amandes:       { name:'Amandes',                   qty:4.3,  unit:'g',     step:1,   kcal:5.79,  prot:0.21,  k:7.33,  fibre:0.125, vitC:0,              gluc:0.095  },
-  nigelle:       { name:'Nigelle',                   qty:2.2,   unit:'g',     step:1,   kcal:4,     prot:0.23,  k:8.08,  fibre:0.06,  vitC:0,              gluc:0.23   },
-  sesame:        { name:'Sésame complet (moulu)',    qty:8.6,  unit:'g',     step:1,   kcal:5.73,  prot:0.177, k:4.68,  fibre:0.118, vitC:0,              gluc:0.098  },
+  noix:          { name:'Noix',                      qty:38.1,  unit:'g',     step:5,   kcal:6.54,  prot:0.15,  k:4.41,  fibre:0.067, vitC:0,              gluc:0.069  },
+  noixBresil:    { name:'Noix du Brésil',            qty:7.6,   unit:'g',     step:1,   kcal:6.56,  prot:0.14,  k:6.59,  fibre:0.075, vitC:0,              gluc:0.053  },
+  noisettes:     { name:'Noisettes',                 qty:7.6,  unit:'g',     step:1,   kcal:6.28,  prot:0.15,  k:6.80,  fibre:0.097, vitC:0,              gluc:0.072  },
+  grainesCourge: { name:'Graines de courge',         qty:15.2,  unit:'g',     step:1,   kcal:5.59,  prot:0.30,  k:8.09,  fibre:0.06,  vitC:0,              gluc:0.045  },
+  amandes:       { name:'Amandes',                   qty:7.6,  unit:'g',     step:1,   kcal:5.79,  prot:0.21,  k:7.33,  fibre:0.125, vitC:0,              gluc:0.095  },
+  nigelle:       { name:'Nigelle',                   qty:3.8,   unit:'g',     step:1,   kcal:4,     prot:0.23,  k:8.08,  fibre:0.06,  vitC:0,              gluc:0.23   },
+  sesame:        { name:'Sésame complet (moulu)',    qty:15,   unit:'g',     step:1,   kcal:5.73,  prot:0.177, k:4.68,  fibre:0.118, vitC:0,              gluc:0.098  },
   huileOliveOl:  { name:"Huile d'olive (oléag.)",    qty:12,  unit:'g',     step:1,   kcal:9,     prot:0,     k:0,     fibre:0,     vitC:0,              gluc:0      },
   chocolat70:    { name:'Chocolat noir 70%',         qty:20,  unit:'g',     step:5,   kcal:5.46,  prot:0.078, k:7.15,  fibre:0.11,  vitC:0,              gluc:0.35   },
   banane:        { name:'Banane (après-midi)',       qty:180, unit:'g',     step:10,  kcal:0.89,  prot:0.011, k:3.58,  fibre:0.026, vitC:0.087,          gluc:0.197  },
@@ -66,10 +66,10 @@ const defaultFoods = {
 // Regroupement pour l'affichage dans l'onglet « Aliments »
 const foodGroups = [
   { title:'Petit-déjeuner',    ids:['oeufs','patateDouce','champignons','courgettes','huileOlivePD'] },
-  { title:'Hydratation matin', ids:['linMoulu','chia'] },
+  { title:'Graines mixées matin', ids:['sesame','chia','linMoulu'] },
   { title:'Clous de girofle',  ids:['clousGirofle'] },
   { title:'Créneau créatine',  ids:['dattes'] },
-  { title:'Mix oléagineux',    ids:['noix','noixBresil','noisettes','grainesCourge','amandes','nigelle','sesame','huileOliveOl','chocolat70'] },
+  { title:'Mix oléagineux',    ids:['noix','noixBresil','noisettes','grainesCourge','amandes','nigelle','huileOliveOl','chocolat70'] },
   { title:'Fruits & kiwi',     ids:['banane','kiwi'] },
   { title:'Whey + Collagène',  ids:['whey','collagene'] },
   { title:'Dîner',             ids:['viandePoisson','legumesDiner'] },
@@ -83,10 +83,10 @@ const foodGroups = [
 // recalculés à partir de ça : qty[id] = (parts[id] / Σparts) × total.
 // Permet de scaler tout le mix d'un coup ou de rééquilibrer les proportions
 // sans toucher aux 6 inputs un par un.
-const MIX_OLEAGINEUX_IDS = ['noix','noixBresil','noisettes','grainesCourge','amandes','nigelle','sesame'];
+const MIX_OLEAGINEUX_IDS = ['noix','noixBresil','noisettes','grainesCourge','amandes','nigelle'];
 const defaultMixOleagineux = {
-  total: 80,                   // g/jour pour les 7 oléagineux
-  parts: { noix:300, noixBresil:60, noisettes:30, grainesCourge:60, amandes:30, nigelle:15, sesame:60 }
+  total: 80,                 // g/jour pour les 6 oléagineux (sésame retiré, désormais dans le mix graines matin)
+  parts: { noix:150, noixBresil:30, noisettes:30, grainesCourge:60, amandes:30, nigelle:15 }
 };
 
 // ---------- 3) SUPPLÉMENTS ----------
@@ -510,8 +510,8 @@ const PROT_SOURCES = [
   { name:'Viande / poisson', ids:['viandePoisson'],                                                                               color:'#e06060' },
   { name:'Whey',             ids:['whey'],                                                                                        color:'#a78bfa' },
   { name:'Collagène',        ids:['collagene'],                                                                                   color:'#5dadec' },
-  { name:'Oléagineux',       ids:['noix','noixBresil','noisettes','grainesCourge','amandes','nigelle','sesame','amandesCoucher','chocolat70'], color:'#4fd1a5' },
+  { name:'Oléagineux',       ids:['noix','noixBresil','noisettes','grainesCourge','amandes','nigelle','amandesCoucher','chocolat70'],           color:'#4fd1a5' },
   { name:'Légumes',          ids:['patateDouce','champignons','courgettes','legumesDiner'],                                       color:'#7adfa4' },
-  { name:'Graines / lin',    ids:['chia','linMoulu'],                                                                             color:'#9aa0e8' },
+  { name:'Graines (sésame, chia, lin)', ids:['sesame','chia','linMoulu'],                                                        color:'#9aa0e8' },
   { name:'Fruits',           ids:['dattes','banane','kiwi','pomme'],                                                              color:'#e8a7d3' }
 ];
