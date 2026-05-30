@@ -438,7 +438,7 @@ function renderAlimentsList() {
 
     // Mix oléagineux : ligne "Total" + 6 lignes de parts (qty dérivée), puis
     // les autres ids du groupe (huile / chocolat) en mode qty classique.
-    const isMix = group.title === 'Mix oléagineux';
+    const isMix = group.title.startsWith('Mix oléagineux');
     if (isMix) {
       const sum = mixPartsSum();
       html += `<div class="aliment-row mix-total-row" data-mix-total>
@@ -1074,7 +1074,7 @@ function vigProtein(protPerKg, totalProt) {
   return {
     level: 'low',
     title: 'Protéines — résolu ✅',
-    subtitle: `${protF}g/j (${pkg} g/kg) en 3 prises. Whey 30g l'après-midi.`,
+    subtitle: `${protF}g/j (${pkg} g/kg) en 3 prises. Whey 20g l'après-midi.`,
     advice: ''
   };
 }

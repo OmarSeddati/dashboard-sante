@@ -65,15 +65,15 @@ const defaultFoods = {
 
 // Regroupement pour l'affichage dans l'onglet « Aliments »
 const foodGroups = [
-  { title:'Petit-déjeuner',    ids:['oeufs','patateDouce','champignons','courgettes','huileOlivePD'] },
-  { title:'Graines mixées matin', ids:['sesame','chia','linMoulu'] },
+  { title:'Graines mixées matin (gel)', ids:['sesame','chia','linMoulu'] },
+  { title:'Repas du matin (patate douce + légumes)', ids:['patateDouce','champignons','courgettes','huileOlivePD'] },
   { title:'Clous de girofle',  ids:['clousGirofle'] },
-  { title:'Créneau créatine',  ids:['dattes'] },
-  { title:'Mix oléagineux',    ids:['noix','noixBresil','noisettes','grainesCourge','amandes','nigelle','huileOliveOl','chocolat70'] },
+  { title:'Multi + créatine (~11h)',  ids:['dattes'] },
+  { title:'Mix oléagineux (13h)', ids:['noix','noixBresil','noisettes','grainesCourge','amandes','nigelle','huileOliveOl','chocolat70'] },
   { title:'Fruits & kiwi',     ids:['banane','kiwi'] },
   { title:'Whey + Collagène',  ids:['whey','collagene'] },
   { title:'Dîner',             ids:['viandePoisson','legumesDiner'] },
-  { title:'Soir & coucher',    ids:['pomme','amandesCoucher'] },
+  { title:'Soir & coucher (œufs en dernier repas)', ids:['pomme','oeufs','amandesCoucher'] },
   { title:'Sel ajouté',        ids:['sel'] }
 ];
 

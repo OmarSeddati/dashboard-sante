@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr" data-snapshot="2026-05-27">
+<html lang="fr" data-snapshot="2026-05-30">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard Santé — Snapshot 2026-05-27</title>
+<title>Dashboard Santé — Snapshot 2026-05-30</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/dashboard-sante.css">
 </head>
@@ -17,11 +17,11 @@
 </header>
 
 <div class="stats-row">
-  <div class="stat-card"><div class="val" data-stat-card="kcal">~2 750 kcal</div><div class="label">Apport / jour</div></div>
+  <div class="stat-card"><div class="val" data-stat-card="kcal">~2 260 kcal</div><div class="label">Apport / jour</div></div>
   <div class="stat-card"><div class="val">~<span data-edit="water">3,5</span>L</div><div class="label">Eau / jour</div></div>
-  <div class="stat-card"><div class="val" data-stat-card="prot">~111g</div><div class="label">Protéines / jour</div></div>
-  <div class="stat-card"><div class="val" data-stat-card="gluc">~240g</div><div class="label">Glucides / jour</div></div>
-  <div class="stat-card"><div class="val" data-stat-card="fibre">~35g</div><div class="label">Fibres / jour</div></div>
+  <div class="stat-card"><div class="val" data-stat-card="prot">~131g</div><div class="label">Protéines / jour</div></div>
+  <div class="stat-card"><div class="val" data-stat-card="gluc">~128g</div><div class="label">Glucides / jour</div></div>
+  <div class="stat-card"><div class="val" data-stat-card="fibre">~40g</div><div class="label">Fibres / jour</div></div>
   <div class="stat-card"><div class="val">9</div><div class="label">Suppléments</div></div>
   <div class="stat-card"><div class="val">~<span data-edit="sportHours">9</span>h</div><div class="label">Sport+Danse / semaine</div></div>
 </div>
@@ -42,7 +42,7 @@
 <!-- ==================== TAB: ROUTINE ==================== -->
 <div id="routine" class="tab-content active">
   <h2 class="section-title">Routine quotidienne</h2>
-  <p class="section-sub">Protéines <span data-stat-card="prot">~111g</span>/j (<span data-derived="protPerKg">1,73</span> g/kg) · Glucides <span data-stat-card="gluc">~240g</span>/j · Potassium <span data-stat-card="k">~3 700 mg</span> · Zinc séparé du Mg par ~6h · <strong data-status-mirror="kcal">Total <span data-stat-card="kcal">~2 750 kcal</span>/j</strong></p>
+  <p class="section-sub">Protéines <span data-stat-card="prot">~131g</span>/j (<span data-derived="protPerKg">2,05</span> g/kg) · Glucides <span data-stat-card="gluc">~128g</span>/j · Potassium <span data-stat-card="k">~4 076 mg</span> · Zinc séparé du Mg par ~6h · <strong data-status-mirror="kcal">Total <span data-stat-card="kcal">~2 260 kcal</span>/j</strong></p>
 
   <div class="checklist-header" data-checklist-tab="routine">
     <div class="cl-info">
@@ -54,94 +54,102 @@
     <button class="cl-btn" type="button" onclick="resetChecklist('routine')">Réinitialiser</button>
     <button class="cl-btn" type="button" onclick="resetTimelineOrder('routine')" title="Restaurer l'ordre d'origine des prises">↺ Ordre</button>
   </div>
-  <p class="section-sub" style="margin:0 0 14px;font-size:12px;color:var(--text-faint);">💡 Glissez-déposez les cartes pour réorganiser vos prises. L'ordre est sauvegardé automatiquement.</p>
+  <p class="section-sub" style="margin:0 0 14px;font-size:12px;color:var(--text-faint);">💡 Glissez-déposez les cartes pour réorganiser vos prises. L'ordre est sauvegardé automatiquement. Horaires donnés pour un réveil à ~9h — décalez tout selon votre heure de réveil. <em>(Si l'ordre semble incohérent après cette mise à jour, cliquez sur « ↺ Ordre » pour repartir de l'ordre par défaut.)</em></p>
 
   <div class="timeline">
-    <div class="tl-item"><div class="tl-card">
-      <div class="tl-time">Réveil</div>
+    <div class="tl-item"><div class="tl-card" data-tl-id="r-eau-reveil">
+      <div class="tl-time">Réveil (ex. 9h)</div>
       <div class="tl-title">Eau tiède</div>
       <div class="tl-desc">0,5L d'eau à ~40°C, à jeun juste après le réveil. Réhydrate après la nuit et active en douceur la motilité digestive.</div>
       <div class="tl-tags"><span class="tag tag-kcal">0 kcal</span><span class="tag tag-blue">Hydratation</span></div>
     </div></div>
-    <div class="tl-item"><div class="tl-card" data-foods="sesame,chia,linMoulu">
+    <div class="tl-item"><div class="tl-card" data-tl-id="r-graines" data-foods="sesame,chia,linMoulu">
       <div class="tl-time">Quelques min après</div>
-      <div class="tl-title">Eau tiède + Graines mixées (sésame, chia, lin)</div>
-      <div class="tl-desc">0,5L d'eau à ~40°C + <span data-qty="sesame">15</span>g sésame complet moulu + <span data-qty="chia">15</span>g graines de chia + <span data-qty="linMoulu">15</span>g graines de lin fraîchement moulues, mixés ensemble. À jeun. <strong>Lin</strong> : lignanes (phyto-œstrogènes les + concentrés du règne végétal), oméga-3 ALA, mucilage. <strong>Chia</strong> : mucilage hydratant, ALA, fibres solubles. <strong>Sésame</strong> : ~975 mg Ca/100g (15g = +~146 mg Ca/j), lignanes et phytostérols — moudre frais sinon les graines entières passent intactes (Ca non bio-disponible). Moudre sésame + lin juste avant consommation (ALA et lignanes s'oxydent en quelques heures). Stocker les graines entières au congélateur.</div>
+      <div class="tl-title">Eau chaude 60° + Graines mixées (sésame, chia, lin)</div>
+      <div class="tl-desc">0,5L d'eau chaude à ~60°C + <span data-qty="sesame">15</span>g sésame complet moulu + <span data-qty="chia">15</span>g graines de chia + <span data-qty="linMoulu">15</span>g graines de lin fraîchement moulues, mixés ensemble en poudre. À jeun. L'eau à ~60°C maximise la formation du <strong>gel (mucilage)</strong>. <strong>Lin</strong> : lignanes (phyto-œstrogènes les + concentrés du règne végétal), oméga-3 ALA, mucilage. <strong>Chia</strong> : mucilage hydratant, ALA, fibres solubles. <strong>Sésame</strong> : ~975 mg Ca/100g (15g = +~146 mg Ca/j), lignanes et phytostérols — moudre frais sinon les graines entières passent intactes (Ca non bio-disponible). Moudre sésame + lin juste avant consommation (ALA et lignanes s'oxydent en quelques heures). Stocker les graines entières au congélateur.</div>
       <div class="tl-tags"><span class="tag tag-kcal" data-metric="kcal">~240 kcal</span><span class="tag tag-blue" data-metric="fibre">Fibres ~11g</span><span class="tag tag-green">ALA + Lignanes + Ca</span><span class="tag tag-orange" data-metric="gluc">Glucides ~3g</span></div>
     </div></div>
-    <div class="tl-item"><div class="tl-card" data-foods="oeufs,patateDouce,champignons,courgettes,huileOlivePD">
-      <div class="tl-time">Petit-déjeuner</div>
-      <div class="tl-title">Œufs + Patate douce + Champignons + Courgettes + Suppléments liposolubles</div>
-      <div class="tl-desc"><span data-qty="oeufs">3</span> œufs bio poêlés + <span data-qty="patateDouce">150</span>g patate douce + <span data-qty="champignons">50</span>g champignons de Paris poêlés + <span data-qty="courgettes">80</span>g courgettes poêlées + 2 càs huile d'olive extra + épices + ~100ml eau. Champignons : sélénium, ergothionéine (antioxydant unique), vit D (si exposés UV), B2/B3/B5. Courgettes : potassium, vit C, faible densité énergétique → satiété sans alourdir.</div>
-      <div class="tl-tags"><span class="tag tag-kcal" data-metric="kcal">~650-720 kcal</span><span class="tag tag-purple" data-metric="prot">Protéines ~27g</span><span class="tag tag-green" data-metric="k">Potassium ~1 586mg</span><span class="tag tag-blue" data-metric="vitC">Vit C ~124mg</span><span class="tag tag-warn" data-metric="na">Sodium ~?mg</span><span class="tag tag-orange" data-metric="gluc">Glucides ~50g</span></div>
-      <div class="warn-box" style="margin-top:12px;"><strong>Suppléments :</strong> Vit4ever Premium Multi (2 caps) · CoQ10 Zenement (200mg) · Oméga-3 Zenement IFOS · D3+K2 Vit4ever Depot — tous liposolubles, absorption optimisée par œufs + huile olive (~43g lipides).</div>
+    <div class="tl-item"><div class="tl-card" data-tl-id="r-pd-legumes" data-foods="patateDouce,champignons,courgettes,huileOlivePD">
+      <div class="tl-time">Juste après le gel</div>
+      <div class="tl-title">Patate douce + Champignons + Courgettes + Huile d'olive</div>
+      <div class="tl-desc"><span data-qty="patateDouce">150</span>g patate douce + <span data-qty="champignons">50</span>g champignons de Paris poêlés + <span data-qty="courgettes">80</span>g courgettes poêlées + <strong>2 càs huile d'olive extra</strong> + épices. Pris juste après le gel : le mucilage <strong>aplatit le pic glycémique</strong> de la patate douce (synergie, pas une perte). L'huile d'olive rend le bêta-carotène de la patate douce bio-disponible (×3-5 d'absorption). Champignons : sélénium, ergothionéine, vit D (si UV), B2/B3/B5. Courgettes : potassium, vit C. <em>Les œufs sont désormais pris le soir comme dernier repas.</em></div>
+      <div class="tl-tags"><span class="tag tag-kcal" data-metric="kcal">~430 kcal</span><span class="tag tag-purple" data-metric="prot">Protéines ~6g</span><span class="tag tag-green" data-metric="k">Potassium ~900mg</span><span class="tag tag-blue" data-metric="vitC">Vit C ~30mg</span><span class="tag tag-orange" data-metric="gluc">Glucides ~33g</span></div>
     </div></div>
-    <div class="tl-item"><div class="tl-card" data-foods="clousGirofle">
-      <div class="tl-time">+ 1h</div>
+    <div class="tl-item"><div class="tl-card" data-tl-id="r-girofle" data-foods="clousGirofle">
+      <div class="tl-time">+ 1h (ex. 10h)</div>
       <div class="tl-title">Eau + Clous de girofle</div>
       <div class="tl-desc">0,5L eau + <span data-qty="clousGirofle">2</span> clous de girofle. Eugénol : anti-inflammatoire, antiseptique. Rotation 5j/7 recommandée.</div>
       <div class="tl-tags"><span class="tag tag-kcal" data-metric="kcal">~0-5 kcal</span><span class="tag tag-green">Anti-inflammatoire</span></div>
     </div></div>
-    <div class="tl-item"><div class="tl-card" data-foods="dattes">
-      <div class="tl-time">+ 1h</div>
-      <div class="tl-title">Créatine + Taurine + Dattes</div>
-      <div class="tl-desc">0,5L eau + 10g créatine monohydrate + 2g taurine (poudre Vit4ever) + <span data-qty="dattes">0</span>g de dattes (Deglet Nour ou équivalent). AVANT les oléagineux — meilleure absorption sur estomac moins chargé en graisses. Double osmolyte (créatine + taurine) pour l'hydratation cellulaire. Pic d'insuline des dattes améliore l'absorption.</div>
-      <div class="tl-tags"><span class="tag tag-kcal" data-metric="kcal">~70-90 kcal</span><span class="tag tag-purple">Créatine 10g</span><span class="tag tag-green">Taurine 2g</span><span class="tag tag-blue" data-metric="k">Potassium ~200mg</span><span class="tag tag-orange" data-metric="gluc">Glucides ~24g</span></div>
+    <div class="tl-item"><div class="tl-card" data-tl-id="r-multi-creatine" data-foods="dattes">
+      <div class="tl-time">~2h après le réveil (ex. 11h)</div>
+      <div class="tl-title">Multivitamine + Créatine + Taurine</div>
+      <div class="tl-desc">Vit4ever Premium Multi (2 caps) + 0,5L eau + 10g créatine monohydrate + 2g taurine (poudre Vit4ever) + <span data-qty="dattes">0</span>g de dattes. Créneau choisi <strong>~2h après le gel</strong> (le mucilage a quitté l'estomac → minéraux du Multi non piégés) et <strong>avant les oléagineux</strong> (hors phytates). Le fer du Multi reste loin des 564mg de vit C du créneau kiwi → absorption maîtrisée (vigilance ferritine), et son zinc à distance maximale du Mg du soir. Créatine + taurine : non-minéraux, insensibles aux fibres, double osmolyte pour l'hydratation cellulaire.</div>
+      <div class="tl-tags"><span class="tag tag-kcal" data-metric="kcal">~0 kcal</span><span class="tag tag-blue">Multi · fer / B / minéraux</span><span class="tag tag-purple">Créatine 10g</span><span class="tag tag-green">Taurine 2g</span><span class="tag tag-orange" data-metric="gluc">Glucides ~0g</span></div>
+      <div class="warn-box" style="margin-top:12px;"><strong>Pourquoi ici :</strong> la fraction liposoluble du Multi (A/D/E/K) est <em>redondante</em> avec les suppléments dédiés (D3+K2, CoQ10) — inutile de la caler sur le gras. Ce qui pilote le placement, ce sont ses <strong>minéraux + vitamines B</strong> : créneau propre (hors gel et hors phytates), fer loin de la grosse vit C, zinc à distance max du Mg du coucher. Si le fer gêne à jeun → prendre avec une petite bouchée pauvre en fibres, sans agrume.</div>
     </div></div>
-    <div class="tl-item"><div class="tl-card" data-foods="noix,noixBresil,noisettes,grainesCourge,amandes,nigelle,huileOliveOl,chocolat70">
-      <div class="tl-time">Quelques min après</div>
-      <div class="tl-title">Oléagineux + Huile d'olive + Chocolat noir</div>
-      <div class="tl-desc"><span data-derived="oleagineuxTotal">71</span>g mix (<span data-qty="noix">38.1</span>g noix + <span data-qty="noixBresil">7.6</span>g noix du Brésil + <span data-qty="noisettes">7.6</span>g noisettes + <span data-qty="grainesCourge">15.2</span>g graines de courge + <span data-qty="amandes">7.6</span>g amandes + <span data-qty="nigelle">3.8</span>g nigelle) + 2 càs huile d'olive extra + <span data-qty="chocolat70">20</span>g chocolat noir 70%. Le sésame est désormais pris séparément avec le chia et le lin au créneau « eau tiède + graines mixées » (apport Ca + lignanes + phytostérols dissocié des phytates des oléagineux).</div>
+    <div class="tl-item"><div class="tl-card" data-tl-id="r-oleagineux" data-foods="noix,noixBresil,noisettes,grainesCourge,amandes,nigelle,huileOliveOl,chocolat70">
+      <div class="tl-time">ex. 13h</div>
+      <div class="tl-title">Oléagineux + Huile d'olive + Chocolat noir + Suppléments liposolubles</div>
+      <div class="tl-desc"><span data-derived="oleagineuxTotal">71</span>g mix (<span data-qty="noix">38.1</span>g noix + <span data-qty="noixBresil">7.6</span>g noix du Brésil + <span data-qty="noisettes">7.6</span>g noisettes + <span data-qty="grainesCourge">15.2</span>g graines de courge + <span data-qty="amandes">7.6</span>g amandes + <span data-qty="nigelle">3.8</span>g nigelle) + 2 càs huile d'olive extra + <span data-qty="chocolat70">20</span>g chocolat noir 70%. Le gras abondant de ce créneau optimise l'absorption des liposolubles dédiés. Le sésame est pris séparément le matin (Ca + lignanes dissociés des phytates des oléagineux).</div>
       <div class="tl-tags"><span class="tag tag-kcal" data-metric="kcal">~950-1 050 kcal</span><span class="tag tag-green">Lipides qualité</span><span class="tag tag-blue">Mg + Sélénium</span><span class="tag tag-purple">Polyphénols</span><span class="tag tag-orange" data-metric="gluc">Glucides ~28g</span></div>
+      <div class="warn-box" style="margin-top:12px;"><strong>Suppléments liposolubles :</strong> CoQ10 Zenement (200mg) · Oméga-3 Zenement IFOS · D3+K2 Vit4ever Depot — absorption optimisée par le gras des oléagineux + huile d'olive. La D3 en milieu de journée est préférable au soir.</div>
     </div></div>
-    <div class="tl-item"><div class="tl-card">
+    <div class="tl-item"><div class="tl-card" data-tl-id="r-hydra-1">
+      <div class="tl-time">ex. 15h</div>
       <div class="tl-title">Hydratation</div>
       <div class="tl-desc">0,5L eau pure.</div>
       <div class="tl-tags"><span class="tag tag-kcal">0 kcal</span></div>
     </div></div>
-    <div class="tl-item"><div class="tl-card" data-foods="banane">
-      <div class="tl-time">+ 1h</div>
+    <div class="tl-item"><div class="tl-card" data-tl-id="r-fruit-1" data-foods="banane">
+      <div class="tl-time">+ 30 min</div>
       <div class="tl-title">Banane OU Pomme (alternance)</div>
       <div class="tl-desc">Un fruit par créneau, alterner jour par jour. Banane (~400mg K, IG 52) ou pomme (~150mg K, IG 36, pectine). Réduit le fructose total et les pics glycémiques.</div>
       <div class="tl-tags"><span class="tag tag-kcal" data-metric="kcal">~80-110 kcal</span><span class="tag tag-green">Potassium</span><span class="tag tag-blue">Alternance IG</span><span class="tag tag-orange" data-metric="gluc">Glucides ~27g</span></div>
     </div></div>
     <div class="tl-item tl-group">
-      <div class="tl-card" data-foods="kiwi">
-      <div class="tl-time">+ 1h</div>
+      <div class="tl-card" data-tl-id="r-kiwi" data-foods="kiwi">
+      <div class="tl-time">ex. 16h</div>
       <div class="tl-title">Kiwi + Zinc + Vitamine C</div>
-      <div class="tl-desc">Kiwi (~<span data-food-vitc="kiwi">64</span>mg vit C naturelle) + Zinc <span data-supp-display="zinc">8</span>mg (WeightWorld) + Vit C <span data-supp-display="vitC">500</span>mg (½ comprimé Innovit, pris après le kiwi). La vit C forme un complexe chélaté avec le zinc → absorption améliorée de 20-30%. Pas de phytates, pas de fer, pas de Mg à ce moment = zéro compétition.</div>
+      <div class="tl-desc">Kiwi (~<span data-food-vitc="kiwi">64</span>mg vit C naturelle) + Zinc <span data-supp-display="zinc">8</span>mg (WeightWorld) + Vit C <span data-supp-display="vitC">500</span>mg (½ comprimé Innovit, pris après le kiwi). La vit C forme un complexe chélaté avec le zinc → absorption améliorée de 20-30%. Zinc à ~5h du fer du Multi et ~7h du Mg du soir = zéro compétition. <strong>Prendre le zinc d'abord</strong>, puis la whey 15-20 min après (son calcium concurrence légèrement le zinc).</div>
       <div class="tl-tags"><span class="tag tag-kcal" data-metric="kcal">~40-55 kcal</span><span class="tag tag-green" data-metric="vitC">Vit C ~564mg</span><span class="tag tag-purple">Zinc <span data-supp-display="zinc">8</span>mg</span><span class="tag tag-blue">Zéro compétition</span></div>
       </div>
-      <div class="tl-card" data-foods="whey,collagene">
-      <div class="tl-time">+ 20 min max</div>
+      <div class="tl-card" data-tl-id="r-whey" data-foods="whey,collagene">
+      <div class="tl-time">+ 15-20 min</div>
       <div class="tl-title">Whey + Collagène</div>
-      <div class="tl-desc">0,5L eau + <span data-qty="whey">20</span>g whey (~<span data-derived="wheyProt">16</span>g protéines) + <span data-qty="collagene">10</span>g collagène hydrolysé Vit4ever (type 1 & 3). Vit C du kiwi encore en pic plasmatique → cofacteur de la synthèse de collagène. Whey (leucine = MPS musculaire) + collagène (glycine + proline = tissus conjonctifs) = complémentaires.</div>
+      <div class="tl-desc">0,5L eau + <span data-qty="whey">20</span>g whey (~<span data-derived="wheyProt">16</span>g protéines) + <span data-qty="collagene">10</span>g collagène hydrolysé Vit4ever (type 1 & 3). Vit C du kiwi encore en pic plasmatique → cofacteur de la synthèse de collagène. Whey (leucine = MPS musculaire) + collagène (glycine + proline = tissus conjonctifs) = complémentaires. Encadre l'entraînement du soir.</div>
       <div class="tl-tags"><span class="tag tag-kcal" data-metric="kcal">~150-170 kcal</span><span class="tag tag-purple" data-metric="prot">Protéines ~24g</span><span class="tag tag-green">Collagène 10g</span><span class="tag tag-blue">Vit C en pic</span></div>
       </div>
     </div>
-    <div class="tl-item"><div class="tl-card">
+    <div class="tl-item"><div class="tl-card" data-tl-id="r-hydra-2">
       <div class="tl-time">+ 1h</div>
       <div class="tl-title">Hydratation</div>
       <div class="tl-desc">0,5L eau pure.</div>
       <div class="tl-tags"><span class="tag tag-kcal">0 kcal</span></div>
     </div></div>
-    <div class="tl-item"><div class="tl-card" data-foods="viandePoisson,legumesDiner">
-      <div class="tl-time">+ 2h — Dîner</div>
+    <div class="tl-item"><div class="tl-card" data-tl-id="r-diner" data-foods="viandePoisson,legumesDiner">
+      <div class="tl-time">ex. 18h — Dîner</div>
       <div class="tl-title">Repas principal</div>
-      <div class="tl-desc">~<span data-qty="viandePoisson">200</span>g viande/poisson + <span data-qty="legumesDiner">250</span>g légumes variés (patate douce, haricots, carottes, petits pois, oignon, olives, pruneaux ; brocoli occasionnel).</div>
+      <div class="tl-desc">~<span data-qty="viandePoisson">200</span>g viande/poisson + <span data-qty="legumesDiner">250</span>g légumes variés (patate douce, haricots, carottes, petits pois, oignon, olives, pruneaux ; brocoli occasionnel). Avec la whey de 16h, encadre l'entraînement du soir.</div>
       <div class="tl-tags"><span class="tag tag-kcal" data-metric="kcal">~500-700 kcal</span><span class="tag tag-purple" data-metric="prot">Protéines ~45g</span><span class="tag tag-warn" data-metric="na">Sodium ~?mg</span><span class="tag tag-green">Légumes variés</span><span class="tag tag-blue">Fer héminique</span><span class="tag tag-orange" data-metric="gluc">Glucides ~36g</span></div>
     </div></div>
-    <div class="tl-item"><div class="tl-card" data-foods="pomme">
+    <div class="tl-item"><div class="tl-card" data-tl-id="r-fruit-2" data-foods="pomme">
       <div class="tl-time">+ 1h</div>
       <div class="tl-title">Eau + Pomme OU Banane (l'autre)</div>
       <div class="tl-desc">0,5L eau + le fruit non pris l'après-midi. Pectine de la pomme ou potassium de la banane selon le jour.</div>
       <div class="tl-tags"><span class="tag tag-kcal" data-metric="kcal">~80-110 kcal</span><span class="tag tag-green">Fibres</span><span class="tag tag-orange" data-metric="gluc">Glucides ~21g</span></div>
     </div></div>
-    <div class="tl-item"><div class="tl-card" data-foods="amandesCoucher">
+    <div class="tl-item"><div class="tl-card" data-tl-id="r-oeufs-soir" data-foods="oeufs">
+      <div class="tl-time">Soir — dernier repas</div>
+      <div class="tl-title">3 Œufs (dernier repas)</div>
+      <div class="tl-desc"><span data-qty="oeufs">3</span> œufs bio poêlés + épices. Dernier repas de la journée : les protéines + leucine soutiennent la MPS nocturne. <strong>À prendre 2-3h avant le coucher</strong> (pas 1h) pour limiter le reflux et préserver le sommeil. L'huile d'olive étant passée au matin, ces œufs sont plus légers en gras qu'avant.</div>
+      <div class="tl-tags"><span class="tag tag-kcal" data-metric="kcal">~230 kcal</span><span class="tag tag-purple" data-metric="prot">Protéines ~19g</span><span class="tag tag-warn" data-metric="na">Sodium ~140mg</span><span class="tag tag-blue">MPS nocturne</span></div>
+    </div></div>
+    <div class="tl-item"><div class="tl-card" data-tl-id="r-mg" data-foods="amandesCoucher">
       <div class="tl-time">Coucher</div>
       <div class="tl-title">Magnésium seul</div>
-      <div class="tl-desc">Mg bisglycinate Vit4ever 2 caps (310mg élémentaire) avec quelques amandes. Zinc pris ~6h avant → zéro compétition d'absorption. La glycine du bisglycinate favorise le sommeil.</div>
-      <div class="tl-tags"><span class="tag tag-kcal" data-metric="kcal">~25-35 kcal</span><span class="tag tag-purple">Mg 310mg</span><span class="tag tag-green">Sommeil</span><span class="tag tag-blue">Zn séparé ~6h</span></div>
+      <div class="tl-desc">Mg bisglycinate Vit4ever 2 caps (310mg élémentaire) avec quelques amandes. Zinc pris ~7h avant (créneau 16h) → zéro compétition d'absorption. La glycine du bisglycinate favorise le sommeil.</div>
+      <div class="tl-tags"><span class="tag tag-kcal" data-metric="kcal">~25-35 kcal</span><span class="tag tag-purple">Mg 310mg</span><span class="tag tag-green">Sommeil</span><span class="tag tag-blue">Zn séparé ~7h</span></div>
     </div></div>
   </div>
 </div>
@@ -175,7 +183,7 @@
   <div id="aliments-list"></div>
 
   <div class="info-box" style="margin-top:18px;">
-    <strong>Note :</strong> valeurs par 100g (ou par pièce), sourcées CIQUAL ANSES / USDA FoodData Central. Convention CIQUAL : <em>glucides = glucides disponibles</em> (exclut les fibres, comptées séparément) — cohérent avec l'étiquetage nutritionnel européen. Les protéines totales incluent uniquement l'alimentaire — les ~<span data-derived="wheyProt">24</span>g de whey sont déjà comptés dans la whey. Les boissons (eau, infusions) et suppléments en gélules ne sont pas listés ici car leur impact calorique est négligeable.
+    <strong>Note :</strong> valeurs par 100g (ou par pièce), sourcées CIQUAL ANSES / USDA FoodData Central. Convention CIQUAL : <em>glucides = glucides disponibles</em> (exclut les fibres, comptées séparément) — cohérent avec l'étiquetage nutritionnel européen. Les protéines totales incluent uniquement l'alimentaire — les ~<span data-derived="wheyProt">16</span>g de whey sont déjà comptés dans la whey. Les boissons (eau, infusions) et suppléments en gélules ne sont pas listés ici car leur impact calorique est négligeable.
   </div>
 </div>
 
@@ -263,7 +271,7 @@
         <div class="supp-detail"><span class="dl">Durée</span><br><span class="dv">13 mois</span></div>
         <div class="supp-detail"><span class="dl">Timing</span><br><span class="dv">Avec kiwi + zinc</span></div>
       </div>
-      <div class="supp-reason"><strong><span data-supp-display="vitC">500</span>mg quotidien</strong> avec le kiwi et le zinc (créneau après-midi). Vit C totale <span data-grand="vitC">~825 mg</span>/j (alim <span data-food="vitC">~325 mg</span> + suppl <span data-supp-display="vitC">500</span>mg). Optimise absorption zinc + synthèse collagène. ½ cp après le kiwi pour protéger l'estomac.</div>
+      <div class="supp-reason"><strong><span data-supp-display="vitC">500</span>mg quotidien</strong> avec le kiwi et le zinc (créneau après-midi). Vit C totale <span data-grand="vitC">~640 mg</span>/j (alim <span data-food="vitC">~140 mg</span> + suppl <span data-supp-display="vitC">500</span>mg). Optimise absorption zinc + synthèse collagène. ½ cp après le kiwi pour protéger l'estomac.</div>
     </div>
   </div>
 </div>
@@ -275,13 +283,13 @@
   <table class="nutri-table">
     <thead><tr><th>Nutriment</th><th>Source alimentaire</th><th>Supplément</th><th>Total</th><th>Objectif</th></tr></thead>
     <tbody>
-      <tr><td><strong>Énergie totale</strong></td><td><span data-food="kcal">~2 750 kcal</span></td><td>—</td><td class="grand-cell"><span data-grand="kcal">~2 750 kcal</span></td><td><span data-target-edit="kcal">2 300-2 900 kcal</span></td></tr>
-      <tr><td>Protéines</td><td><span data-food="prot">~87g</span></td><td>~<span data-derived="wheyProt">24</span>g (whey)</td><td class="grand-cell"><span data-grand="prot">~111g</span> (<span data-derived="protPerKg">1,73</span> g/kg)</td><td><span data-target-edit="prot">90-130 g</span></td></tr>
-      <tr><td><strong>Glucides totaux</strong></td><td><span data-food="gluc">~240g</span></td><td>—</td><td class="grand-cell"><span data-grand="gluc">~240g</span></td><td><span data-target-edit="gluc">180-280 g</span></td></tr>
-      <tr><td><strong>Lipides totaux</strong></td><td><span data-food="lip">~150g</span></td><td>—</td><td class="grand-cell"><span data-grand="lip">~150g</span></td><td><span data-target-edit="lip">60-150 g</span></td></tr>
+      <tr><td><strong>Énergie totale</strong></td><td><span data-food="kcal">~2 260 kcal</span></td><td>—</td><td class="grand-cell"><span data-grand="kcal">~2 260 kcal</span></td><td><span data-target-edit="kcal">2 300-2 900 kcal</span></td></tr>
+      <tr><td>Protéines</td><td><span data-food="prot">~115g</span></td><td>~<span data-derived="wheyProt">16</span>g (whey)</td><td class="grand-cell"><span data-grand="prot">~131g</span> (<span data-derived="protPerKg">2,05</span> g/kg)</td><td><span data-target-edit="prot">90-130 g</span></td></tr>
+      <tr><td><strong>Glucides totaux</strong></td><td><span data-food="gluc">~128g</span></td><td>—</td><td class="grand-cell"><span data-grand="gluc">~128g</span></td><td><span data-target-edit="gluc">180-280 g</span></td></tr>
+      <tr><td><strong>Lipides totaux</strong></td><td><span data-food="lip">~129g</span></td><td>—</td><td class="grand-cell"><span data-grand="lip">~129g</span></td><td><span data-target-edit="lip">60-150 g</span></td></tr>
       <tr><td>Oméga-3 EPA+DHA</td><td>Variable (poisson)</td><td>1500mg (Zenement IFOS)</td><td class="grand-cell grand-static-ok">1500mg+</td><td>≥500mg</td></tr>
-      <tr><td>Fibres</td><td><span data-food="fibre">~35g</span></td><td>—</td><td class="grand-cell"><span data-grand="fibre">~35g</span></td><td><span data-target-edit="fibre">25-45 g</span></td></tr>
-      <tr><td>Potassium</td><td><span data-food="k">~3 700 mg</span></td><td>—</td><td class="grand-cell"><span data-grand="k">~3 700 mg</span></td><td><span data-target-edit="k">3 500-4 700 mg</span></td></tr>
+      <tr><td>Fibres</td><td><span data-food="fibre">~40g</span></td><td>—</td><td class="grand-cell"><span data-grand="fibre">~40g</span></td><td><span data-target-edit="fibre">25-45 g</span></td></tr>
+      <tr><td>Potassium</td><td><span data-food="k">~4 076 mg</span></td><td>—</td><td class="grand-cell"><span data-grand="k">~4 076 mg</span></td><td><span data-target-edit="k">3 500-4 700 mg</span></td></tr>
       <tr><td>Sodium</td><td><span data-food="na">~0 mg</span> (<span data-qty="sel">3</span>g sel ajouté)</td><td>—</td><td class="grand-cell"><span data-grand="na">~0 mg</span></td><td><span data-target-edit="na">≤2 300 mg</span></td></tr>
       <tr><td><strong>Calcium</strong></td><td><span data-food="ca">~0 mg</span></td><td><span data-supp="ca">~120 mg</span> (multi)</td><td class="grand-cell"><span data-grand="ca">~0 mg</span></td><td><span data-target-edit="ca">1 000-2 000 mg</span></td></tr>
       <tr><td>Fer</td><td><span data-food="fe">~0 mg</span></td><td><span data-supp="fe">~14 mg</span> (multi)</td><td class="grand-cell"><span data-grand="fe">~0 mg</span></td><td><span data-target-edit="fe">8-18 mg</span></td></tr>
@@ -293,7 +301,7 @@
       <tr><td>Manganèse</td><td><span data-food="mn">~0 mg</span></td><td><span data-supp="mn">~2 mg</span> (multi)</td><td class="grand-cell"><span data-grand="mn">~0 mg</span></td><td><span data-target-edit="mn">2,3-6 mg</span></td></tr>
       <tr><td>Sélénium <small style="color:var(--text-faint)">thyroïde, glutathion-peroxydase</small></td><td><span data-food="se">~0 µg</span></td><td><span data-supp="se">~55 µg</span> (multi)</td><td class="grand-cell"><span data-grand="se">~0 µg</span></td><td><span data-target-edit="se">55-250 µg</span></td></tr>
       <tr><td>Iode</td><td><span data-food="iode">~0 µg</span></td><td><span data-supp="iode">~150 µg</span> (multi)</td><td class="grand-cell"><span data-grand="iode">~0 µg</span></td><td><span data-target-edit="iode">150-600 µg</span></td></tr>
-      <tr><td>Vitamine C</td><td><span data-food="vitC">~325 mg</span></td><td><span data-supp-display="vitC">500</span>mg (½ cp Innovit)</td><td class="grand-cell"><span data-grand="vitC">~825 mg</span></td><td><span data-target-edit="vitC">110-1 000 mg</span></td></tr>
+      <tr><td>Vitamine C</td><td><span data-food="vitC">~140 mg</span></td><td><span data-supp-display="vitC">500</span>mg (½ cp Innovit)</td><td class="grand-cell"><span data-grand="vitC">~640 mg</span></td><td><span data-target-edit="vitC">110-1 000 mg</span></td></tr>
       <tr><td>Vitamine E (α-tocophérol)</td><td><span data-food="vitE">~0 mg</span></td><td><span data-supp="vitE">~24 mg</span> (multi)</td><td class="grand-cell"><span data-grand="vitE">~0 mg</span></td><td><span data-target-edit="vitE">12-50 mg</span></td></tr>
       <tr><td>Vitamine A (ER) <small style="color:var(--text-faint)">peau, immunité — UL = rétinol pur, carot. illimité</small></td><td><span data-food="vitA">~0 µg</span></td><td><span data-supp="vitA">~800 µg</span> (multi)</td><td class="grand-cell"><span data-grand="vitA">~0 µg</span></td><td><span data-target-edit="vitA">700-3 000 µg</span></td></tr>
       <tr><td>Vitamine D3 <small style="color:var(--text-faint)">os, immunité, humeur, T</small></td><td><span data-food="vitD">~0 µg</span></td><td><span data-supp="vitD">~130 µg</span> (Depot + multi)</td><td class="grand-cell"><span data-grand="vitD">~0 µg</span></td><td><span data-target-edit="vitD">20-75 µg</span> <small>(UL 100)</small></td></tr>
@@ -331,14 +339,14 @@
     <div class="nutri-block">
       <h4>Répartition énergétique <small>P / G / L</small></h4>
       <div class="kcal-split-bar">
-        <div class="kcal-seg kcal-prot" data-kcal-seg="prot" style="width:16%"><span data-derived="kcalProtPct">16</span>%</div>
-        <div class="kcal-seg kcal-gluc" data-kcal-seg="gluc" style="width:35%"><span data-derived="kcalGlucPct">35</span>%</div>
-        <div class="kcal-seg kcal-lip"  data-kcal-seg="lip"  style="width:49%"><span data-derived="kcalLipPct">49</span>%</div>
+        <div class="kcal-seg kcal-prot" data-kcal-seg="prot" style="width:24%"><span data-derived="kcalProtPct">24</span>%</div>
+        <div class="kcal-seg kcal-gluc" data-kcal-seg="gluc" style="width:23%"><span data-derived="kcalGlucPct">23</span>%</div>
+        <div class="kcal-seg kcal-lip"  data-kcal-seg="lip"  style="width:53%"><span data-derived="kcalLipPct">53</span>%</div>
       </div>
       <div class="kcal-split-legend">
-        <span><span class="dot dot-prot"></span> Protéines <span data-derived="kcalProt">~444</span> kcal · <span data-grand="prot">~111g</span></span>
-        <span><span class="dot dot-gluc"></span> Glucides <span data-derived="kcalGluc">~960</span> kcal · <span data-grand="gluc">~240g</span></span>
-        <span><span class="dot dot-lip"></span> Lipides <span data-derived="kcalLip">~1346</span> kcal · ~<span data-derived="lipG">150</span>g</span>
+        <span><span class="dot dot-prot"></span> Protéines <span data-derived="kcalProt">~526</span> kcal · <span data-grand="prot">~131g</span></span>
+        <span><span class="dot dot-gluc"></span> Glucides <span data-derived="kcalGluc">~511</span> kcal · <span data-grand="gluc">~128g</span></span>
+        <span><span class="dot dot-lip"></span> Lipides <span data-derived="kcalLip">~1 162</span> kcal · ~<span data-derived="lipG">129</span>g</span>
       </div>
       <div class="nutri-note">
         <strong>Cibles % macros (éditables) :</strong>
@@ -350,7 +358,7 @@
     </div>
 
     <div class="nutri-block">
-      <h4>Sources de protéines <small>~<span data-grand="prot">111g</span>/j</small></h4>
+      <h4>Sources de protéines <small>~<span data-grand="prot">131g</span>/j</small></h4>
       <div class="prot-bar" data-prot-bar></div>
       <div class="prot-list" data-prot-list></div>
       <div class="nutri-note">La whey concentre la leucine (déclencheur n°1 de la MPS). Le collagène (riche en glycine/proline) ne compte pas comme protéine "complète" pour le muscle mais nourrit les tissus conjonctifs.</div>
@@ -367,7 +375,7 @@
     </div>
 
     <div class="nutri-block">
-      <h4>Types de fibres <small>~<span data-grand="fibre">35g</span>/j</small></h4>
+      <h4>Types de fibres <small>~<span data-grand="fibre">40g</span>/j</small></h4>
       <div class="kcal-split-bar">
         <div class="kcal-seg" data-fibre-seg="soluble"   style="width:30%;background:var(--info)"><span data-derived="fibreSolPct">30</span>%</div>
         <div class="kcal-seg" data-fibre-seg="insoluble" style="width:70%;background:var(--accent)"><span data-derived="fibreInsolPct">70</span>%</div>
@@ -414,17 +422,17 @@
     </div></div>
     <div class="prio-item"><div class="prio-num prio-3">3</div><div class="prio-text">
       <h4>Probiotiques en cure saisonnière</h4>
-      <p>Fibres prébiotiques à <span data-food="fibre">~35g</span>/j. Un multi-souches 10-30 milliards UFC, 2-3 mois 2x/an.</p>
+      <p>Fibres prébiotiques à <span data-food="fibre">~40g</span>/j. Un multi-souches 10-30 milliards UFC, 2-3 mois 2x/an.</p>
     </div></div>
     <div class="prio-item"><div class="prio-num prio-4">4</div><div class="prio-text">
       <h4>Avocat occasionnel</h4>
-      <p>~700 mg K + graisses mono-insaturées + folate. Pertinent maintenant que le potassium est plus serré (<span data-food="k">~3 700 mg</span>) après retrait des figues.</p>
+      <p>~700 mg K + graisses mono-insaturées + folate. Pertinent maintenant que le potassium est plus serré (<span data-food="k">~4 076 mg</span>) après retrait des figues.</p>
     </div></div>
   </div>
   <div class="info-box" style="margin-top:20px;">
     <strong>État actuel :</strong><br>
-    <span data-resolu="potassium"><span data-resolu-icon>✅</span> Potassium <span data-food="k">~3 700 mg</span> (patate douce + courgettes + champignons au petit-déj)</span><br>
-    <span data-resolu="protein"><span data-resolu-icon>✅</span> Protéines <span data-grand="prot">~111g</span>/j (<span data-derived="protPerKg">1,73</span> g/kg)</span><br>
+    <span data-resolu="potassium"><span data-resolu-icon>✅</span> Potassium <span data-food="k">~4 076 mg</span> (patate douce + courgettes + champignons au petit-déj)</span><br>
+    <span data-resolu="protein"><span data-resolu-icon>✅</span> Protéines <span data-grand="prot">~131g</span>/j (<span data-derived="protPerKg">2,05</span> g/kg)</span><br>
     <span data-resolu="collagene"><span data-resolu-icon>✅</span> Collagène 10g/j + Taurine 2g/j (longévité articulaire + cellulaire)</span><br>
     <span data-resolu="b9b12"><span data-resolu-icon>✅</span> B9/B12 formes méthylées (Vit4ever Premium)</span><br>
     <span data-resolu="k2"><span data-resolu-icon>✅</span> K2 all-trans K2VITAL® (multi + D3+K2)</span><br>
@@ -432,7 +440,7 @@
     <span data-resolu="zincVitC"><span data-resolu-icon>✅</span> Zinc avec vit C (kiwi + <span data-supp-display="vitC">500</span>mg → absorption +20-30%)</span><br>
     <span data-resolu="createTaurine"><span data-resolu-icon>✅</span> Créatine+taurine AVANT oléagineux (meilleure absorption)</span><br>
     <span data-resolu="fructose"><span data-resolu-icon>✅</span> Fructose ~<span data-derived="dattesGluc">17</span>g via <span data-qty="dattes">0</span>g de dattes Deglet Nour/j (pas de figues, alternance fruits)</span><br>
-    <span data-resolu="gluc"><span data-resolu-icon>✅</span> Glucides à <span data-grand="gluc">~240g</span>/j</span>
+    <span data-resolu="gluc"><span data-resolu-icon>✅</span> Glucides à <span data-grand="gluc">~128g</span>/j</span>
   </div>
 </div>
 
@@ -479,7 +487,7 @@
     <div class="vig-legend-item"><div class="vig-legend-dot" style="background:var(--purple)"></div> Surveillance</div>
   </div>
   <div class="vig-grid">
-    <div class="vig-card open" data-vig-id="sodium"><div class="vig-card-head" onclick="toggleVig(this)"><div class="vig-severity sev-high"></div><div class="vig-head-text"><h4 data-vig-title>Sodium élevé — potassium OK mais ratio déséquilibré</h4><div class="vig-subtitle" data-vig-subtitle>Potassium <span data-food="k">~3 700 mg</span> ✅ — Sodium <span data-grand="na">~0 mg</span> (cible ≤2 300 mg)</div></div><span class="vig-level lvl-high">Élevé</span><span class="vig-chevron">&#9654;</span></div>
+    <div class="vig-card open" data-vig-id="sodium"><div class="vig-card-head" onclick="toggleVig(this)"><div class="vig-severity sev-high"></div><div class="vig-head-text"><h4 data-vig-title>Sodium élevé — potassium OK mais ratio déséquilibré</h4><div class="vig-subtitle" data-vig-subtitle>Potassium <span data-food="k">~4 076 mg</span> ✅ — Sodium <span data-grand="na">~0 mg</span> (cible ≤2 300 mg)</div></div><span class="vig-level lvl-high">Élevé</span><span class="vig-chevron">&#9654;</span></div>
       <div class="vig-body"><div class="vig-body-inner"><span data-vig-advice><strong>Ratio Na/K :</strong> <span data-derived="naK">~0</span>:1 (idéal ≤1:1). Sel ajouté actuel : <span data-derived="saltCurrent">11</span>g/j. Réduire le sel (édit. dans l'en-tête ou onglet Aliments) pour faire descendre le ratio.</span><div class="vig-meter"><div class="vig-meter-bar"><div class="vig-meter-fill" data-meter="naPctAjr" style="width:0%;background:var(--warn)"></div></div><div class="vig-meter-label">Sodium <span data-derived="naPctAjr">~0</span>% AJR</div></div><div class="vig-meter"><div class="vig-meter-bar"><div class="vig-meter-fill" data-meter="kPctHigh" style="width:0%;background:var(--accent)"></div></div><div class="vig-meter-label">Potassium <span data-derived="kPctHigh">~0</span>% cible haute</div></div></div></div>
     </div>
     <div class="vig-card" data-vig-id="zinc"><div class="vig-card-head" onclick="toggleVig(this)"><div class="vig-severity sev-high"></div><div class="vig-head-text"><h4 data-vig-title>Zinc <span data-grand="zinc">~41</span>mg/j — proche limite EFSA 40mg</h4><div class="vig-subtitle" data-vig-subtitle>Multi (Zn bisglycinate) + WW <span data-supp-display="zinc">8</span>mg + alimentation ~8mg</div></div><span class="vig-level lvl-high">Élevé</span><span class="vig-chevron">&#9654;</span></div>
@@ -494,13 +502,13 @@
     <div class="vig-card" data-vig-id="girofle"><div class="vig-card-head" onclick="toggleVig(this)"><div class="vig-severity sev-medium"></div><div class="vig-head-text"><h4 data-vig-title>Clous de girofle — eugénol au long cours</h4><div class="vig-subtitle" data-vig-subtitle>3 clous/j = ~30-60mg eugénol (DJA OMS : 160mg pour 64kg)</div></div><span class="vig-level lvl-medium">Moyen</span><span class="vig-chevron">&#9654;</span></div>
       <div class="vig-body"><div class="vig-body-inner"><span data-vig-advice>En dessous du DJA mais rotation 5j/7 recommandée. Surveiller brûlures gastriques, reflux. Propriétés antiplaquettaires — attention si anticoagulants.</span></div></div>
     </div>
-    <div class="vig-card" data-vig-id="protein"><div class="vig-card-head" onclick="toggleVig(this)"><div class="vig-severity sev-low"></div><div class="vig-head-text"><h4 data-vig-title>Protéines — résolu ✅</h4><div class="vig-subtitle" data-vig-subtitle><span data-grand="prot">~111g</span>/j (<span data-derived="protPerKg">1,73</span> g/kg) en 3 prises. Whey 30g l'après-midi.</div></div><span class="vig-level lvl-low">Résolu</span><span class="vig-chevron">&#9654;</span></div>
-      <div class="vig-body"><div class="vig-body-inner"><span data-vig-advice></span><div class="vig-meter"><div class="vig-meter-bar"><div class="vig-meter-fill" data-meter="protPerKg" style="width:0%;background:var(--accent)"></div></div><div class="vig-meter-label"><span data-derived="protPerKg">1,73</span> g/kg ✅</div></div></div></div>
+    <div class="vig-card" data-vig-id="protein"><div class="vig-card-head" onclick="toggleVig(this)"><div class="vig-severity sev-low"></div><div class="vig-head-text"><h4 data-vig-title>Protéines — résolu ✅</h4><div class="vig-subtitle" data-vig-subtitle><span data-grand="prot">~131g</span>/j (<span data-derived="protPerKg">2,05</span> g/kg) en 3 prises. Whey 30g l'après-midi.</div></div><span class="vig-level lvl-low">Résolu</span><span class="vig-chevron">&#9654;</span></div>
+      <div class="vig-body"><div class="vig-body-inner"><span data-vig-advice></span><div class="vig-meter"><div class="vig-meter-bar"><div class="vig-meter-fill" data-meter="protPerKg" style="width:0%;background:var(--accent)"></div></div><div class="vig-meter-label"><span data-derived="protPerKg">2,05</span> g/kg ✅</div></div></div></div>
     </div>
     <div class="vig-card"><div class="vig-card-head" onclick="toggleVig(this)"><div class="vig-severity sev-low"></div><div class="vig-head-text"><h4>B9/B12 — résolu ✅</h4><div class="vig-subtitle">Magnafolate® Pro + méthylcobalamine (Vit4ever Premium)</div></div><span class="vig-level lvl-low">Résolu</span><span class="vig-chevron">&#9654;</span></div>
       <div class="vig-body"><div class="vig-body-inner">Formes bioactives, pas de conversion enzymatique nécessaire. MTHFR-proof. Doser homocystéine annuellement (&lt;10 µmol/L).</div></div>
     </div>
-    <div class="vig-card" data-vig-id="articulations"><div class="vig-card-head" onclick="toggleVig(this)"><div class="vig-severity sev-low"></div><div class="vig-head-text"><h4 data-vig-title>Articulations — résolu ✅</h4><div class="vig-subtitle" data-vig-subtitle>Collagène 10g/j type 1&3 + Vit C <span data-grand="vitC">~825 mg</span>/j</div></div><span class="vig-level lvl-low">Résolu</span><span class="vig-chevron">&#9654;</span></div>
+    <div class="vig-card" data-vig-id="articulations"><div class="vig-card-head" onclick="toggleVig(this)"><div class="vig-severity sev-low"></div><div class="vig-head-text"><h4 data-vig-title>Articulations — résolu ✅</h4><div class="vig-subtitle" data-vig-subtitle>Collagène 10g/j type 1&3 + Vit C <span data-grand="vitC">~640 mg</span>/j</div></div><span class="vig-level lvl-low">Résolu</span><span class="vig-chevron">&#9654;</span></div>
       <div class="vig-body"><div class="vig-body-inner"><span data-vig-advice>Pris après kiwi (vit C en pic). Bénéfices articulaires documentés à 8-12 semaines. La taurine contribue aussi à la santé des tissus conjonctifs.</span></div></div>
     </div>
     <div class="vig-card"><div class="vig-card-head" onclick="toggleVig(this)"><div class="vig-severity sev-watch"></div><div class="vig-head-text"><h4>Sédentarité professionnelle</h4><div class="vig-subtitle">Informaticien assis. Pauses 25 min = bon réflexe.</div></div><span class="vig-level lvl-watch">Surveillance</span><span class="vig-chevron">&#9654;</span></div>
@@ -533,7 +541,7 @@
       <tr><td style="font-weight:600">Homocystéine</td><td>Valider que les formes méthylées B9/B12 fonctionnent. Marqueur CV indépendant.</td><td>&lt;10 µmol/L</td><td>1x/an</td></tr>
       <tr><td style="font-weight:600">Créatinine / DFG</td><td>Créatine 10g/j fausse la créatinine. Prévenir le médecin. DFG = vrai indicateur rénal.</td><td>DFG &gt;90 mL/min</td><td>1x/an</td></tr>
       <tr><td style="font-weight:600">Cystatine C</td><td>Alternative à la créatinine non faussée par la créatine. Demander si DFG ambigu.</td><td>0,53-0,95 mg/L</td><td>Si DFG ambigu</td></tr>
-      <tr><td style="font-weight:600">Ferritine</td><td><span data-qty="oeufs">3</span> œufs/j + viande + fer du multi + <span data-grand="vitC">~825 mg</span> vit C (booste absorption fer). Risque de surcharge.</td><td>30-300 ng/mL (homme)</td><td>1x/an</td></tr>
+      <tr><td style="font-weight:600">Ferritine</td><td><span data-qty="oeufs">3</span> œufs/j + viande + fer du multi + <span data-grand="vitC">~640 mg</span> vit C (booste absorption fer). Risque de surcharge.</td><td>30-300 ng/mL (homme)</td><td>1x/an</td></tr>
       <tr><td style="font-weight:600">CRP ultrasensible</td><td>Inflammation chronique bas-bruit. Pertinent avec <span data-profile="sportHours">9</span>h sport/semaine (micro-inflammation).</td><td>&lt;1 mg/L idéal</td><td>1x/an</td></tr>
       <tr><td style="font-weight:600">HbA1c</td><td>Glycémie longue durée. <span data-qty="dattes">0</span>g de dattes/j + patate douce. Créatine aide la sensibilité insuline.</td><td>&lt;5,6%</td><td>1x/2 ans</td></tr>
       <tr><td style="font-weight:600">Triglycérides / HDL</td><td>Oméga-3 1500mg + huile olive devraient donner un bon ratio.</td><td>TG/HDL &lt;2</td><td>1x/an</td></tr>
@@ -555,9 +563,9 @@
   <h3 style="font-size:16px;font-weight:600;margin:0 0 12px;color:var(--accent);">Synergies à maximiser</h3>
 
   <div class="inter-card"><span class="inter-type inter-good">Synergie</span>
-    <div class="inter-title">D3 + K2 + CoQ10 + Ω3 + Graisses du petit-déj</div>
-    <div class="inter-desc">Tous liposolubles. Les ~43g de lipides (œufs + huile olive) multiplient l'absorption de D3, K2, CoQ10 et des oméga-3 EPA/DHA.</div>
-    <div class="inter-timing">⏰ Réveil — tous ensemble avec le petit-déjeuner gras</div>
+    <div class="inter-title">D3 + K2 + CoQ10 + Ω3 + Gras des oléagineux</div>
+    <div class="inter-desc">Tous liposolubles. Le gras des oléagineux + huile d'olive du créneau de 13h multiplie l'absorption de D3, K2, CoQ10 et des oméga-3 EPA/DHA. La D3 en milieu de journée est préférable au soir.</div>
+    <div class="inter-timing">⏰ ex. 13h — avec les oléagineux + huile d'olive</div>
   </div>
   <div class="inter-card"><span class="inter-type inter-good">Synergie</span>
     <div class="inter-title">Vitamine C + Zinc</div>
@@ -571,8 +579,8 @@
   </div>
   <div class="inter-card"><span class="inter-type inter-good">Synergie</span>
     <div class="inter-title">Créatine + Taurine (double osmolyte)</div>
-    <div class="inter-desc">Les deux tirent l'eau dans les cellules par des mécanismes complémentaires. Créatine via les transporteurs CreaT, taurine via la régulation osmotique. Améliore l'hydratation intracellulaire.</div>
-    <div class="inter-timing">⏰ Même créneau, avant les oléagineux</div>
+    <div class="inter-desc">Les deux tirent l'eau dans les cellules par des mécanismes complémentaires. Créatine via les transporteurs CreaT, taurine via la régulation osmotique. Améliore l'hydratation intracellulaire. Non-minéraux → insensibles au gel des graines.</div>
+    <div class="inter-timing">⏰ ex. 11h — avec le Multi, avant les oléagineux</div>
   </div>
   <div class="inter-card"><span class="inter-type inter-good">Synergie</span>
     <div class="inter-title">Dattes + Créatine (pic insuline)</div>
@@ -586,8 +594,8 @@
   </div>
   <div class="inter-card"><span class="inter-type inter-good">Synergie</span>
     <div class="inter-title">Bêta-carotène (patate douce) + Huile d'olive</div>
-    <div class="inter-desc">Le bêta-carotène est liposoluble. L'huile d'olive du petit-déj multiplie par 3-5x son absorption et sa conversion en vitamine A active (rétinol).</div>
-    <div class="inter-timing">⏰ Réveil — patate douce poêlée dans l'huile d'olive</div>
+    <div class="inter-desc">Le bêta-carotène est liposoluble. L'huile d'olive du matin (avec la patate douce) multiplie par 3-5x son absorption et sa conversion en vitamine A active (rétinol).</div>
+    <div class="inter-timing">⏰ Matin — patate douce + huile d'olive, juste après le gel</div>
   </div>
 
   <h3 style="font-size:16px;font-weight:600;margin:24px 0 12px;color:var(--danger);">Compétitions à éviter</h3>
@@ -600,7 +608,7 @@
   <div class="inter-card"><span class="inter-type inter-bad">Compétition</span>
     <div class="inter-title">Zinc vs Fer (multi)</div>
     <div class="inter-desc">Compétition pour le transporteur DMT-1 au niveau intestinal. L'effet est surtout marqué à doses élevées.</div>
-    <div class="inter-timing">✅ Résolu — Multi (fer) au réveil, Zinc au créneau kiwi (plusieurs h d'écart)</div>
+    <div class="inter-timing">✅ Résolu — Multi (fer) en milieu de matinée (~11h), Zinc au créneau kiwi (~16h) → ~5h d'écart</div>
   </div>
   <div class="inter-card"><span class="inter-type inter-bad">Compétition</span>
     <div class="inter-title">Zinc vs Cuivre</div>
@@ -610,12 +618,17 @@
   <div class="inter-card"><span class="inter-type inter-bad">Compétition</span>
     <div class="inter-title">Phytates (oléagineux) vs Zinc et Fer</div>
     <div class="inter-desc">Les phytates des oléagineux, graines et légumineuses forment des complexes insolubles avec le zinc et le fer, réduisant leur absorption de 30-50%.</div>
-    <div class="inter-timing">✅ Résolu — Zinc avec kiwi (pas avec oléagineux). Multi (fer) le matin, oléagineux quelques h après.</div>
+    <div class="inter-timing">✅ Résolu — Zinc avec kiwi (pas avec oléagineux). Multi (fer) à ~11h, dans une fenêtre propre : hors du gel des graines (matin) et avant les oléagineux (13h).</div>
   </div>
   <div class="inter-card"><span class="inter-type inter-neutral">Précaution</span>
     <div class="inter-title">Vitamine C haute dose + Fer</div>
-    <div class="inter-desc">La vit C augmente fortement l'absorption du fer non-héminique. Avec <span data-grand="vitC">~825 mg</span> de vit C/j + fer du multi + viande au dîner, surveiller la ferritine pour éviter une surcharge.</div>
-    <div class="inter-timing">ℹ️ Multi (fer) le matin avec la vit C des aliments du petit-déj. Les <span data-supp-display="vitC">500</span>mg supplémentaires de vit C sont au créneau kiwi = impact moindre sur le fer.</div>
+    <div class="inter-desc">La vit C augmente fortement l'absorption du fer non-héminique. Avec <span data-grand="vitC">~640 mg</span> de vit C/j + fer du multi + viande au dîner, surveiller la ferritine pour éviter une surcharge.</div>
+    <div class="inter-timing">ℹ️ Multi (fer) à ~11h, délibérément <strong>loin</strong> des 564mg de vit C du créneau kiwi (~16h) → absorption du fer maîtrisée. Doser la ferritine 1x/an.</div>
+  </div>
+  <div class="inter-card"><span class="inter-type inter-bad">Compétition</span>
+    <div class="inter-title">Mucilage (gel des graines) vs minéraux</div>
+    <div class="inter-desc">Le gel visqueux du chia/lin/sésame (mucilage, fibre soluble) piège les minéraux co-ingérés (fer, zinc, Ca, Mg) et ralentit leur diffusion. Prendre le Multi <em>dans</em> le gel briderait ses minéraux.</div>
+    <div class="inter-timing">✅ Résolu — Multi décalé à ~11h (~2h après le gel, estomac vidé). Avec le gel : seulement eau / créatine / taurine (insensibles aux fibres).</div>
   </div>
 </div>
 
@@ -660,7 +673,7 @@
     <div class="symp-action"><strong>Action :</strong> réduire à 1 cap/j (155mg) pendant 1 semaine · si résolu, maintenir à 1 cap</div>
   </div>
 
-  <div class="symp-card" data-symp-cond="vitC"><span class="symp-source" style="background:var(--info-dim);color:var(--info);">Vitamine C <span data-grand="vitC">~825 mg</span>/j</span>
+  <div class="symp-card" data-symp-cond="vitC"><span class="symp-source" style="background:var(--info-dim);color:var(--info);">Vitamine C <span data-grand="vitC">~640 mg</span>/j</span>
     <div class="symp-title">Diarrhée, crampes abdominales, brûlures gastriques</div>
     <div class="symp-signs">L'acide ascorbique à haute dose a un effet osmotique intestinal. Le seuil varie selon les personnes (500-2000mg). Prendre le ½ cp après le kiwi (pas à jeun) protège l'estomac.</div>
     <div class="symp-action"><strong>Action :</strong> réduire à ¼ cp (250mg) · prendre toujours après avoir mangé le kiwi</div>
@@ -686,7 +699,7 @@
 
   <div class="symp-card" data-symp-cond="ironVitC"><span class="symp-source" style="background:var(--purple-dim);color:var(--purple);">Fer + Vit C combinés</span>
     <div class="symp-title">Fatigue paradoxale, douleurs articulaires, peau bronzée sans soleil</div>
-    <div class="symp-signs"><span data-grand="vitC">~825 mg</span> de vit C/j booste fortement l'absorption du fer. Chez les hommes, la surcharge en fer (hémochromatose) est le trouble héréditaire le plus fréquent en Europe (~1/200). Signes tardifs : fatigue, douleurs articulaires, hyperpigmentation cutanée, troubles hépatiques.</div>
+    <div class="symp-signs"><span data-grand="vitC">~640 mg</span> de vit C/j booste fortement l'absorption du fer. Chez les hommes, la surcharge en fer (hémochromatose) est le trouble héréditaire le plus fréquent en Europe (~1/200). Signes tardifs : fatigue, douleurs articulaires, hyperpigmentation cutanée, troubles hépatiques.</div>
     <div class="symp-action"><strong>Action :</strong> doser la ferritine annuellement · si &gt;300 ng/mL, réduire la vit C à 250mg et éviter la viande rouge · consulter si &gt;500 ng/mL</div>
   </div>
 </div>
